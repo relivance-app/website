@@ -40,7 +40,7 @@
       </header>
 
       <h1 class="doc-title">Privacy Policy</h1>
-      <p class="doc-meta">Effective: <time datetime="2026-07-02">July 2, 2026</time></p>
+      <p class="doc-meta">Effective: <time datetime="2026-10-21">October 21, 2026</time></p>
 
       <section class="doc-section">
         <p>
@@ -288,7 +288,7 @@
             to make legal or similarly significant automated decisions
             about you or about the contact subjects of your network,
             and they may be deleted in accordance with the app’s data
-            controls and the retention schedule in Section 11.
+            controls and the retention schedule in Section 15.
           </li>
         </ul>
         <p>
@@ -459,13 +459,15 @@
           </li>
           <li>
             <strong>OpenAI, L.L.C.</strong> (California, United States) —
-            large-language-model API used for narrative generation,
-            brief generation, text classification, intent extraction,
-            and natural-language goal analysis. Relevant portions of
-            your data (such as contact context, goal text, interaction
-            summaries, recap-audio transcripts, notes, and uploaded
-            text where applicable) are transmitted to OpenAI for
-            inference. Under OpenAI’s API terms in effect at the time
+            the App includes an AI-assisted spreadsheet-import pathway
+            that can use OpenAI to map spreadsheet columns to contact
+            fields. When configured to use OpenAI, this pathway sends
+            column headings and up to three sample rows for processing.
+            Sample rows may contain names, email addresses, phone
+            numbers, addresses, and notes. This describes the available
+            pathway; it does not confirm that OpenAI processing is
+            enabled in the deployed service. Under OpenAI’s API terms
+            in effect at the time
             of this policy, API inputs and outputs are not used to
             train OpenAI’s models by default unless the customer opts
             in; provider processing and limited retention may occur
@@ -476,11 +478,20 @@
           </li>
           <li>
             <strong>Anthropic, PBC</strong> (California, United States) —
-            large-language-model API (Claude) used for goal analysis,
-            key-people compression, and select intelligence flows.
+            large-language-model API (Claude) used for conversational
+            assistance, request interpretation, answers using selected
+            saved context, relationship and meeting briefs, outreach
+            drafts, recap summaries, contact-information extraction,
+            goal planning and coaching, and screenshot interpretation.
+            Depending on the feature, the information sent may include
+            your messages and conversation history, meeting notes or
+            transcripts, participant and contact names, professional
+            information, relationship context, tasks, goals, selected
+            correspondence, and screenshots you submit. This may
+            include information about people who are not Relivance users.
             Relevant portions of your data are transmitted to
-            Anthropic for inference on the same basis described above
-            for OpenAI: under Anthropic’s API terms in effect at the
+            Anthropic for inference. Under Anthropic’s API terms in
+            effect at the
             time of this policy, API inputs and outputs are not used
             to train Anthropic’s models by default unless the customer
             opts in; provider processing and limited retention may
@@ -559,7 +570,7 @@
         <h2>10. How AI Processing Works</h2>
         <p>
           Several App features rely on third-party large-language-model
-          APIs (currently OpenAI and Anthropic) for inference. When
+          APIs for inference. The provider depends on the feature. When
           you use these features, the App sends the relevant portions
           of your content needed to perform the task — for example,
           contact context, goal text, interaction summaries,
@@ -569,12 +580,29 @@
           output.
         </p>
         <p>
+          Depending on the feature, the information sent may include
+          relevant conversation history and selected information
+          already saved in Relivance, rather than only your latest
+          message. For screenshot interpretation, the submitted image
+          is sent to the AI provider for processing. Some processing
+          begins as part of using a feature, such as opening Reach Out,
+          submitting a recap, or importing a spreadsheet; it does not
+          always require a separate request to generate AI content.
+        </p>
+        <p>
+          Some pathways replace internal record identifiers with
+          temporary labels and limit the records or fields sent.
+          These measures do not make the content anonymous: names,
+          notes, images, or other details may still identify you or
+          another person.
+        </p>
+        <p>
           The AI Output we receive back — including briefs,
           summaries, scores, suggestions, and drafts — is stored under
           your account so you can review, edit, share, or delete it.
           AI Output is retained under the same schedule as the
           underlying content it relates to and may be deleted using
-          the app’s data controls. See Section 12 (Data Retention)
+          the app’s data controls. See Section 15 (Data Retention)
           for the full schedule.
         </p>
         <p>
@@ -649,6 +677,14 @@
           generate AI briefs, or remind you to follow up.
         </p>
         <p>
+          AI-assisted features may send information about your
+          contacts, including people who do not use Relivance, to an
+          AI provider when that information is needed for the feature.
+          This can include information you record about meetings,
+          relationships, and correspondence, as described in Sections
+          9 and 10.
+        </p>
+        <p>
           You are responsible for ensuring you have any required
           rights, permissions, or lawful basis to provide third-party
           contact data to Relivance, in particular where privacy laws
@@ -676,32 +712,21 @@
           U.S.-based providers — for example Anthropic, OpenAI (if
           enabled), Sentry, Apple, Google (if
           you connect it), or providers supporting our support and
-          legal operations. For users located in the EU, EEA, UK, or
-          Switzerland, Relivance relies on Data Processing Agreements
-          (DPAs), Standard Contractual Clauses (SCCs) where applicable,
-          and supplementary technical safeguards for these
-          international transfers.
+          legal operations.
         </p>
         <p>
-          If you are located in the EU, EEA, UK, or Switzerland, we rely
-          on the following safeguards for international transfers,
-          as applicable:
+          Verification of the agreements and transfer arrangements
+          applicable to each provider remains in progress. We have
+          not completed verification of the production Anthropic
+          account’s data-processing agreement or international-transfer
+          arrangements. This policy does not confirm that Standard
+          Contractual Clauses (SCCs) have been executed with every
+          non-EU provider. EU hosting of our primary backend does not
+          mean that all processing takes place in the EU.
         </p>
-        <ul>
-          <li>
-            Standard Contractual Clauses (SCCs) approved by the European
-            Commission, executed with each non-EU sub-processor that
-            processes EU personal data.
-          </li>
-          <li>
-            Supplementary technical measures including encryption in
-            transit (TLS 1.2+), encryption at rest, row-level access
-            controls, and minimum-necessary access by personnel.
-          </li>
-        </ul>
         <p>
-          If you would like a copy of the SCCs we have executed, please
-          email
+          For information about the transfer arrangements applicable
+          to your personal data, please contact
           <a href="mailto:privacy@relivance.app">privacy@relivance.app</a>.
         </p>
         <p>
@@ -749,23 +774,26 @@
           <li>
             <strong>Contacts, interactions, tasks, goals, recap audio,
             and derived intelligence:</strong> for as long as your
-            account is active. Soft-deleted items remain recoverable
-            for up to 30 days, after which they are permanently
-            deleted.
+            account is active, unless deleted earlier. Deleting an
+            item in the App does not establish that every related
+            record or provider-held copy has been erased. Complete
+            deletion coverage remains under verification.
           </li>
           <li>
             <strong>Account-deletion grace period:</strong> when you
             request deletion (from Settings → Delete Account in the
             App, or by emailing privacy@relivance.app), your account is
-            immediately disabled and you are signed out. After a 30-day
-            grace period, all user-generated content is permanently
-            deleted from our active systems. Encrypted backup copies may
-            persist for up to 60 additional days before being purged.
-            The maximum ordinary retention period after a deletion
-            request is therefore up to 90 days, subject to limited
-            records we must retain for legal, tax, security,
-            fraud-prevention, dispute-resolution, or accounting
-            reasons.
+            immediately disabled and you are signed out. The account
+            deletion process includes a 30-day grace period. Some
+            user-owned records are not currently covered by automated
+            deletion, so we cannot represent that all personal data
+            is erased when that period ends. Backup retention and
+            provider-held copies are also not yet fully verified;
+            we do not state a maximum period for those copies here.
+            To request erasure or information about remaining data,
+            contact privacy@relivance.app. These implementation
+            limitations do not restrict your statutory rights or
+            extend any applicable deadline for responding to a request.
           </li>
           <li>
             <strong>Apple subscriptions are managed separately.</strong>
@@ -813,7 +841,11 @@
             a copy of the personal information we hold about you. The
             App includes an in-app data-export feature
             (Settings → Your Data → Export My Data) that delivers a
-            ZIP archive containing your data in JSON and vCard formats.
+            ZIP archive containing selected account data in JSON and
+            vCard formats. This export does not currently cover all
+            account data and should not be treated as a complete
+            response to an access request. Contact privacy@relivance.app
+            to request access to information not included in the export.
           </li>
           <li>
             <strong>Right to rectification:</strong> correct inaccurate
@@ -831,7 +863,10 @@
           <li>
             <strong>Right to data portability:</strong> receive your
             personal data in a structured, commonly used,
-            machine-readable format. The in-app export delivers this.
+            machine-readable format. The in-app export provides some
+            data in these formats; it does not replace your right to
+            request other personal data covered by applicable law.
+            Contact privacy@relivance.app to make a portability request.
           </li>
           <li>
             <strong>Right to restrict processing:</strong> ask us to
