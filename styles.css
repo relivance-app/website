@@ -792,3 +792,17 @@ body.doc .footer {
     margin-top: 64px;
   }
 }
+
+/* Waitlist privacy note and supplementary bot trap. Existing form tokens stay unchanged. */
+.access-purpose {
+  margin: 0;
+  color: var(--wv-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+.access-purpose a { color: var(--wv-accent); }
+.access-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.access-captcha { width: 100%; }
+.access-captcha:empty { display: none; }
+.access-submit:disabled { cursor: default; }

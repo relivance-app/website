@@ -86,69 +86,50 @@ npx --yes serve@latest -l 5173
 Toggle macOS or iOS into dark mode while the page is open to see the dark
 variant. Logo, palette, and form pill swap together; no reload required.
 
-## Early-access form — provider setup
+## Early-access form — first-party waitlist
 
-The form posts to **Formspree**. It's the standard solution for static sites
-on GitHub Pages: free tier, no backend, sends submissions to your inbox by
-default, and forwards them to Mailchimp / ConvertKit / Loops / etc. later if
-you want — without changing the form's HTML.
+The website submits email to the existing EU Supabase `waitlist-signup` Edge
+Function. It stores only email and the original signup timestamp in the isolated
+`public.waitlist` table. There is no browser database client or Supabase key.
 
-### One-time setup
+`waitlist.js` maintains inline loading/error/success announcements and checks
+Cloudflare Turnstile before signup. `index.html` deliberately ships with an empty
+`data-turnstile-sitekey`: submissions stay disabled until approved setup.
 
-1. Sign up at [formspree.io](https://formspree.io/). Free plan supports the
-   volume an early-access form sees comfortably.
-2. Click **New Form**, give it a name (e.g. "Relivance early access"), and
-   set the destination email. The form's endpoint URL appears on the form's
-   settings page — it looks like:
+Before separately authorized website cutover:
 
-   ```
-   https://formspree.io/f/abcd1234
-   ```
+1. Create a free **Managed** Turnstile widget restricted to `relivance.app`.
+   Keep pre-clearance off. Its public site key belongs in `data-turnstile-sitekey`
+   in `index.html`; its secret belongs only in the backend function environment
+   as `WAITLIST_TURNSTILE_SECRET`. Do not use Cloudflare test keys in production.
+2. Backend owner reviews and deploys only `waitlist-signup` to the existing EU
+   project, with `verify_jwt = false`. The handler is intentionally public and
+   validates Turnstile server-side (hostname `relivance.app`, action
+   `waitlist_signup`, single-use verification and a five-minute lifetime).
+3. Verify backend operation/security first under a separately approved plan.
+   Then approve the website revision, processor disclosures and public key.
+4. Publish only after separate founder authorization. Run local tests with
+   `node --test tests/waitlist.test.cjs`; they use DOM/fetch mocks, not live services.
 
-3. Open `index.html` and find the marker:
+The only allowed website origin is `https://relivance.app` (verified GitHub Pages
+CNAME/HTTPS configuration). Do not silently add localhost, preview or www origins
+to production. Local tests mock both Turnstile and the submission endpoint.
 
-   ```html
-   action="https://formspree.io/f/REPLACE_WITH_YOUR_FORMSPREE_ID"
-   ```
+The honeypot supplements Turnstile; it is not a security boundary. Browser CORS
+is not authentication. No IP or other tracking field is retained in the waitlist.
+Repeated email submissions return the same success response. Genuine backend
+failures keep the form retryable and reset the consumed CAPTCHA token.
 
-   Replace the placeholder with your endpoint URL. That's the only change
-   the form needs.
-4. Commit and push. From the next deploy onward, submissions land in your
-   inbox.
+Without JavaScript, the submit button remains disabled and an explanation asks
+visitors to enable JavaScript and reload. There is no native provider fallback.
+Purpose, removal and retention remain as described in the Privacy Policy.
 
-A friendly inline error appears when running locally with the placeholder
-still in place, so a forgotten swap is impossible to miss in production.
-
-### Reply behaviour
-
-Formspree submits the email field as `email`. To make replies easy, in the
-form's Formspree settings:
-
-- **Reply-To**: set to `email` (Formspree exposes this in the form's
-  *Notifications* tab) so hitting "Reply" in your inbox replies to the
-  submitter.
-- **AJAX**: enable JSON responses (default on free tier). The client-side
-  fetch in `index.html` expects a 2xx JSON response to show the inline
-  success state.
-
-### Alternatives (drop-in)
-
-If you'd rather not use Formspree, the following endpoints work as a
-drop-in swap. Same form HTML, just change the `action` URL:
-
-- **Getform** — [getform.io](https://getform.io/), similar UX.
-- **Web3Forms** — [web3forms.com](https://web3forms.com/), no signup,
-  uses an access key.
-- **Buttondown** — [buttondown.email](https://buttondown.email/api).
-  Newsletter-flavoured; their form HTML differs slightly, so adjust the
-  `name` attribute on the email input to match their docs.
-
-### Anti-abuse
-
-Formspree's free tier includes basic bot protection (honeypot + reCAPTCHA
-on suspicious submissions). If abuse becomes a concern, enable
-**Formspree's hCaptcha** in the form settings — no code change required on
-your side.
+Deployment order and rollback: backend first, website second. If cutover fails,
+serve the unavailable signup state (empty site key); leave the existing waitlist
+and 14 imported registrations untouched. Do not reinstate the retired third-party
+form or roll back database permissions. Disable only the new function if necessary,
+with separate production authorization. Preserve the unresolved full-bootstrap
+gate for any fresh backend environment; no migrations are part of this cutover.
 
 ## GitHub Pages — setup
 
@@ -229,7 +210,7 @@ ATT / privacy nutrition labels, GDPR, CCPA, etc.).
 
 Things specifically deferred to that lawyer review:
 
-- DPA / processor relationships with Formspree, your future email-
+- DPA / processor relationships with Supabase, Cloudflare, your future email-
   service provider, and analytics if you add them later.
 - App-specific consents (push notifications, contacts access, calendar
   access, microphone for recap, LinkedIn import scope, etc.).
@@ -263,7 +244,7 @@ Then change the `og:image` and `twitter:image` `<meta>` tags in
 - No testimonial quotes, pricing tier, or feature list.
 - No newsletter-widget aesthetics (promo box, two-column, "Subscribe"
   capitalised across two pills).
-- No analytics, no tracking pixels, no third-party scripts beyond Google
-  Fonts. If you add analytics later, Plausible / Vercel Analytics drop in
+- No analytics or tracking pixels; Cloudflare Turnstile is loaded only for
+  form security. Fonts are self-hosted. If you add analytics later, Plausible / Vercel Analytics drop in
   as a single script tag — and remember to mention them in
   `privacy.html`.

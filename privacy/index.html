@@ -148,10 +148,13 @@
       <section class="doc-section">
         <h2>4. What We Collect on the Website</h2>
         <p>
-          On the Website, the only personal information we collect is
-          the email address you choose to submit through the
-          early-access form, together with the date and time of
-          submission. We do not run advertising trackers, cross-site
+          When you use the early-access form, we store the email address
+          you choose to submit and the date and time of submission in
+          our existing EU-hosted Supabase database. Separately, Cloudflare
+          Turnstile processes technical request and browser/device data
+          to protect the form from automated abuse. The verification token
+          is checked by our server and is not stored in the waitlist.
+          We do not run advertising trackers, cross-site
           fingerprinting scripts, or analytics scripts on the Website.
           We do not use cookies on the Website for tracking.
         </p>
@@ -160,10 +163,10 @@
           record routine request data (IP address, browser type,
           referring page) for security and abuse prevention. Web font
           files for the Roboto typeface are served directly from
-          relivance.app — we do not load fonts, stylesheets, or scripts
-          from third-party content-delivery networks such as Google
-          Fonts, so visiting the Website does not expose your IP address
-          to a font provider.
+          relivance.app, so visiting the Website does not expose your IP
+          address to a font provider. The early-access form loads
+          Cloudflare’s Turnstile script for security verification, as
+          described in Section 9.
         </p>
         <p>
           The email address you submit is used only for: (a) sending you
@@ -427,16 +430,20 @@
         <p><strong>Website sub-processors:</strong></p>
         <ul>
           <li>
-            <strong>Formspree, Inc.</strong> (United States) — processes
-            the email submissions you make through the early-access form
-            on the Website, forwards them to our internal inbox, and
-            stores them in Formspree’s dashboard. Subject to
-            <a
-              href="https://formspree.io/legal/privacy-policy/"
-              rel="noopener noreferrer"
-              target="_blank"
-              >Formspree’s privacy policy</a
-            >.
+            <strong>Supabase, Inc.</strong> (Relivance project hosted in
+            Central EU / Frankfurt, Germany) — receives early-access
+            submissions through a server-side Edge Function and stores
+            only the submitted email address and signup timestamp in an
+            isolated waitlist table, separate from App accounts and contacts.
+          </li>
+          <li>
+            <strong>Cloudflare, Inc.</strong> — provides Turnstile security
+            verification for the early-access form. Cloudflare processes
+            technical request and browser/device data to detect automated
+            abuse. We send the verification token to Cloudflare for validation;
+            we do not send the submitted email address to Turnstile.
+            See <a href="https://www.cloudflare.com/privacypolicy/"
+              rel="noopener noreferrer" target="_blank">Cloudflare’s privacy policy</a>.
           </li>
           <li>
             <strong>GitHub, Inc.</strong> (a Microsoft subsidiary,

@@ -86,36 +86,10 @@
           Private early access is opening soon.
         </p>
 
-        <!--
-          =====================================================================
-          FORMSPREE ENDPOINT — REPLACE BEFORE GOING LIVE
-          =====================================================================
-          The `action` URL below is a placeholder. Sign up at
-          https://formspree.io, create a new form, and copy the form's
-          endpoint URL (it looks like https://formspree.io/f/abcd1234)
-          into the `action` attribute below. Nothing else needs to change.
-
-          Why Formspree: works on a static GitHub Pages site (no backend),
-          has a generous free tier, sends email submissions to you, no
-          tracking by default, lets you wire up Mailchimp / ConvertKit /
-          Loops later without changing the form's HTML.
-
-          Alternatives that drop in the same way (just swap the action URL):
-            • Getform     https://getform.io/
-            • Web3Forms   https://web3forms.com/
-            • Buttondown  https://buttondown.email/api  (their forms are slightly different)
-
-          The fetch handler below treats any 2xx response as success and
-          shows the success state inline (no page redirect). The form
-          gracefully degrades to a normal POST + Formspree's hosted
-          confirmation page if JavaScript is disabled.
-          =====================================================================
-        -->
         <form
           class="access-form"
           id="access-form"
-          action="https://formspree.io/f/mlgzaybw"
-          method="POST"
+          data-turnstile-sitekey=""
           novalidate
         >
           <label for="email" class="visually-hidden">Email Address</label>
@@ -127,10 +101,11 @@
             autocomplete="email"
             placeholder="Email Address"
             required
-            aria-describedby="access-error"
+            aria-describedby="access-error access-purpose"
+            maxlength="254"
             class="access-input"
           />
-          <button type="submit" class="access-submit">
+          <button type="submit" class="access-submit" disabled>
             <span class="access-submit-label">Request Early Access</span>
             <span class="access-submit-spinner" aria-hidden="true"></span>
             <span class="access-submit-success" aria-hidden="true">
@@ -160,8 +135,19 @@
             </span>
           </button>
 
+          <div class="access-honeypot" aria-hidden="true">
+            <label for="website">Leave this field empty</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div id="access-captcha" class="access-captcha"></div>
           <p id="access-error" class="access-error" role="alert" hidden></p>
         </form>
+        <p id="access-purpose" class="access-purpose">
+          Your email is used only for Relivance early-access invitations and launch updates.
+          <a href="/privacy/">Privacy and removal</a>.
+        </p>
+        <noscript><p class="access-purpose">JavaScript is required for secure signup.
+          Enable JavaScript and reload this page to request early access.</p></noscript>
 
         <!--
           Visually-hidden live region for screen readers. The visible
@@ -186,108 +172,6 @@
       </nav>
     </footer>
 
-    <script>
-      // Year auto-roll. Stays cheap and dependency-free.
-      document.getElementById("year").textContent = new Date().getFullYear();
-
-      // ─── Early-access form ──────────────────────────────────────────────
-      //
-      // Submits via fetch so the success state can render inline, keeping
-      // the visitor on the page. If JS is disabled or the fetch fails to
-      // initiate, the form falls back to a normal POST to the endpoint —
-      // Formspree's hosted confirmation page handles that case for free.
-      //
-      // We deliberately do NOT pre-validate beyond "non-empty + looks like
-      // an email": Formspree (and the user's email provider) does the real
-      // check. Over-validation client-side is hostile (e.g. valid
-      // jane@cs.cam.ac.uk emails get rejected by overly-strict regexes).
-      //
-      (function () {
-        const form = document.getElementById("access-form");
-        const emailInput = document.getElementById("email");
-        const errorEl = document.getElementById("access-error");
-        const successEl = document.getElementById("access-success");
-        if (!form || !emailInput) return;
-
-        // Loose RFC-flavoured pattern: something@something.tld. Permissive
-        // by design so we don't false-reject legitimate addresses; the
-        // server-side will do the strict check.
-        const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        const setError = function (msg) {
-          errorEl.textContent = msg;
-          errorEl.hidden = !msg;
-          emailInput.setAttribute("aria-invalid", msg ? "true" : "false");
-        };
-
-        const showSuccess = function () {
-          // Lock the form into the success state without removing it:
-          // input greys out + disables, button morphs to the
-          // "Success ✓" treatment. The whole form stays on screen
-          // so the user sees the locked-in email they just submitted.
-          form.setAttribute("data-state", "success");
-          emailInput.disabled = true;
-          emailInput.readOnly = true;
-          // Announce via the visually-hidden live region for SR users.
-          successEl.textContent = "You’re on the early access list.";
-        };
-
-        form.addEventListener("submit", async function (event) {
-          // If the action URL is still the placeholder, prevent submission
-          // and surface a friendly error during local development so the
-          // dev knows to wire up Formspree before going live.
-          if (form.action.includes("REPLACE_WITH_YOUR_FORMSPREE_ID")) {
-            event.preventDefault();
-            setError("Form endpoint not configured yet.");
-            return;
-          }
-
-          const email = (emailInput.value || "").trim();
-          if (email.length === 0 || !EMAIL_PATTERN.test(email)) {
-            event.preventDefault();
-            setError("Please enter a valid email address.");
-            return;
-          }
-
-          // Hand the submission to fetch so we can render the success
-          // state inline instead of redirecting. event.preventDefault is
-          // intentionally INSIDE the try so a network failure still falls
-          // back to the native form POST (Formspree's hosted confirm
-          // page renders something sensible for the user).
-          let usedFetch = false;
-          try {
-            event.preventDefault();
-            usedFetch = true;
-            setError("");
-            form.setAttribute("data-state", "submitting");
-            const response = await fetch(form.action, {
-              method: "POST",
-              headers: { Accept: "application/json" },
-              body: new FormData(form)
-            });
-            form.removeAttribute("data-state");
-            if (response.ok) {
-              showSuccess();
-            } else {
-              setError("Something went wrong. Please try again in a moment.");
-            }
-          } catch (err) {
-            form.removeAttribute("data-state");
-            if (usedFetch) {
-              setError("Network error. Please try again in a moment.");
-            }
-            // If fetch never started (e.g. CSP block), the browser falls
-            // back to the normal form POST automatically.
-          }
-        });
-
-        // Clear errors as the user types so the inline error doesn't
-        // linger after they've already started fixing the input.
-        emailInput.addEventListener("input", function () {
-          if (errorEl.hidden) return;
-          setError("");
-        });
-      })();
-    </script>
+    <script src="waitlist.js" defer></script>
   </body>
 </html>
