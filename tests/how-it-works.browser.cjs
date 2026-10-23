@@ -33,6 +33,19 @@ async function snapshot(page) {
 async function noOverflow(page) {
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
 }
+async function verifyFinalCTA(page) {
+  const placement = await page.locator('.how-button').evaluate((button) => {
+    const box = button.getBoundingClientRect();
+    const paragraph = button.previousElementSibling.getBoundingClientRect();
+    const heading = button.parentNode.querySelector('h2').getBoundingClientRect();
+    const labelBottom = Math.max(...[...document.querySelectorAll('.node-label')].map((label) => label.getBoundingClientRect().bottom));
+    return { gap: box.top - paragraph.bottom, graphicGap: heading.top - labelBottom, bottom: box.bottom, viewport: innerHeight, inert: button.inert };
+  });
+  assert.ok(Math.abs(placement.gap - 18) < 1, 'Final CTA is not directly below its paragraph');
+  assert.ok(placement.bottom <= placement.viewport - 6, 'Final CTA is clipped');
+  assert.ok(placement.graphicGap >= 8, 'Closing caption crowds the diagram');
+  assert.equal(placement.inert, false);
+}
 async function verifyVisibleLabels(page) {
   const result = await page.locator('.story-art').evaluate((svg) => {
     const box = svg.getBoundingClientRect();
@@ -94,6 +107,7 @@ async function verifyVisibleLabels(page) {
         await seek(page, p);
         snapshots.set(p, await snapshot(page));
         await noOverflow(page);
+        if (p === .04) assert.equal(await page.locator('.how-button').evaluate((button) => { button.focus(); return document.activeElement === button; }), false, 'Hidden CTA received focus');
         if (p === .19) {
           const tipGap = await page.locator('[data-trace]').first().evaluate((path) => {
             const length = path.getTotalLength();
@@ -110,6 +124,7 @@ async function verifyVisibleLabels(page) {
         if ([.04, .19, .33, .57, .81, .95].includes(p)) await page.screenshot({ path: path.join(output, `${name}-${p}.png`) });
       }
       await verifyVisibleLabels(page);
+      await verifyFinalCTA(page);
       for (const selector of ['.nav-access', '.how-button']) assert.equal(await page.locator(selector).evaluate((button) => getComputedStyle(button).color), 'rgb(255, 255, 255)');
       for (const p of [...stops].reverse()) {
         await seek(page, p);
@@ -133,6 +148,7 @@ async function verifyVisibleLabels(page) {
       assert.equal(await page.locator('[data-story]').getAttribute('data-enhanced'), '');
       await seek(page, .95);
       await verifyVisibleLabels(page);
+      await verifyFinalCTA(page);
       await noOverflow(page);
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await frame(page);
@@ -142,6 +158,9 @@ async function verifyVisibleLabels(page) {
       await page.emulateMedia({ reducedMotion: 'no-preference' });
       await frame(page);
       assert.equal(await page.locator('[data-story]').getAttribute('data-enhanced'), '');
+      await seek(page, .95);
+      await page.locator('.how-button').click();
+      await page.waitForURL('**/#access-heading');
       await context.close();
       console.log(`PASS ${name}: forward/reverse, no autoplay, labels, reload/back, resize, reduced-motion toggle`);
     }

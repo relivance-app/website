@@ -42,9 +42,11 @@ export function evaluateStory(input, { width, height, compact = false }) {
   });
   return {
     progress: p, scene, zoom, scale,
-    x: width / 2 - 500 * scale, y: translateY,
+    x: width / 2 - 500 * scale,
+    // Give the closing caption room on short phones without shrinking its text.
+    y: translateY - (compact && height < 330 ? 12 * captions[7] : 0),
     opacity, traces, captions,
-    captionLift: (1 - zoom) * Math.min(compact ? 120 : 200, height * .28),
+    captionLift: (1 - zoom) * Math.min(compact ? 120 : 200, height * .28) + 32 * captions[7],
     labelOpacity: ease(phase(p, .405, .50)),
     // Preserve physical text size as the world zooms out, especially on phones.
     labelSize: (compact ? 12 : 14) / scale,

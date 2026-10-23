@@ -80,10 +80,7 @@ body.how-page {
 .how-story[data-enhanced] .scene-caption h2 { font-size: clamp(28px, 3vw, 39px); margin-bottom: 11px; }
 .how-story[data-enhanced] .scene-caption p { max-width: 580px; margin-inline: auto; font-size: 18px; }
 
-.how-cta { scroll-margin-top: 100px; max-width: 1000px; margin: 0 auto; padding: 100px 24px; text-align: center; }
-.how-cta h2 { margin: 0 0 20px; font-size: clamp(30px, 4.2vw, 48px); line-height: 1.15; font-weight: 500; letter-spacing: -.035em; text-wrap: balance; }
-.how-cta p { margin: 0 0 26px; color: var(--how-secondary); font-size: 17px; }
-.how-cta .how-button { display: inline-flex; align-items: center; justify-content: center; padding: 17px 29px; border-radius: 999px; background: var(--how-blue); color: #fff; text-decoration: none; font-size: 16px; }
+.how-page .how-button { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; margin-top: 18px; padding: 14px 29px; border-radius: 999px; background: var(--how-blue); color: #fff; text-decoration: none; font-size: 16px; line-height: 20px; }
 .how-page .footer { color: var(--how-secondary); padding-top: 32px; padding-bottom: max(30px, env(safe-area-inset-bottom)); }
 
 @media (max-width: 600px) {
@@ -106,7 +103,6 @@ body.how-page {
   .scene-caption .static-icon { width: 66px; height: 66px; padding: 16px; }
   .scene-caption h2 { font-size: 24px; }
   .scene-caption p { font-size: 16px; }
-  .how-cta { padding-block: 58px 80px; }
 }
 @media (max-height: 600px) and (min-width: 601px) {
   .how-story[data-enhanced] .story-sticky { grid-template-rows: minmax(0,1fr) 123px; padding-bottom: 24px; }
@@ -123,5 +119,5 @@ body.how-page {
   .how-story[data-enhanced] .story-viewport { display: none; }
   .how-story[data-enhanced] .story-captions { display: block; transform: none !important; }
   .how-story[data-enhanced] .scene-caption { opacity: 1 !important; transform: none !important; padding: 18px 0; break-inside: avoid; }
-  .how-hero, .how-cta { padding-block: 30px; }
+  .how-hero { padding-block: 30px; }
 }

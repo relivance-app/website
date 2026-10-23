@@ -87,8 +87,8 @@ vector shapes. Desktop overview labels are 14px.
 
 The ordered HTML sequence is the default presentation. Reduced motion, missing
 JavaScript, unsupported sticky positioning, a blocked module or initialization
-failure leave all seven steps readable. A skip link leads directly to early
-access. The decorative SVG is hidden from assistive
+failure leave all seven steps readable. A skip link leads directly to the
+homepage's early-access form. The decorative SVG is hidden from assistive
 technology; semantic headings and descriptions are always in the DOM. There
 are no live announcements on every scroll frame. Print restores the full text
 sequence. CTA text is white on the brand blue. Both links reuse the homepage
@@ -96,8 +96,10 @@ button's shared interaction styles: opacity .94 on hover over 160ms and scale
 .985 on press over 80ms. Reduced motion disables these transitions on this page.
 
 The text overview and its navigation link were removed following design
-review. The story now leads directly into early access; the full diagram
-still holds as the final animation frame. The progress indicator and the
+review. The early-access button sits directly under the final scene's paragraph,
+inside the held complete view. It cannot receive focus or clicks until that
+scene is visible; static fallbacks keep it available. The separate closing
+heading and release paragraph were removed following design review. The progress indicator and the
 “A look inside Relivance” eyebrow have been removed. Circle labels use the same close
 spacing, and all five connectors share a constant curvature.
 
@@ -107,8 +109,7 @@ This is an **intended product journey**, not a claim that every pre-beta
 capability is enabled. The introduction says visitors can start with a goal
 or simply stay connected. The page does not promise
 passive recording, universal correspondence integrations, automatic outreach,
-automatic goal changes or guaranteed outcomes. The early-access line identifies
-Relivance as pre-beta. Detailed implementation qualifications remain in these
+automatic goal changes or guaranteed outcomes. Detailed pre-beta qualifications remain in these
 review notes rather than the removed text overview.
 
 Copy was checked against the iOS repository's `origin/main` snapshot
@@ -181,6 +182,8 @@ entry, and checks:
 - Arrow shaft containment, fully hidden undrawn paths and white CTA text.
 - The cleaned-up header and removed progress UI; manual browser comparison of
   both CTA hover styles against the homepage button.
+- Final CTA placement and clipping before/after resize, hidden-link keyboard
+  containment, and final-button navigation to the existing homepage form.
 - Reload and browser-back restoration midway through the animation, resizing,
   and switching reduced motion on and off.
 - Reduced-motion, disabled-JavaScript and failed-module static presentations.

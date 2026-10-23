@@ -18,6 +18,7 @@ function enhance() {
   const labels = [...story.querySelectorAll('.node-label')];
   const captions = [...story.querySelectorAll('.scene-caption')];
   const captionGroup = story.querySelector('.story-captions');
+  const finalCTA = story.querySelector('.how-button');
   const paths = [...story.querySelectorAll('[data-trace]')];
   const heads = [...story.querySelectorAll('[data-arrowhead]')];
   let raf = 0;
@@ -57,6 +58,7 @@ function enhance() {
     story.removeAttribute('style');
     captions.forEach((caption) => caption.removeAttribute('style'));
     captionGroup.removeAttribute('style');
+    finalCTA.inert = false;
   }
 
   function measure() {
@@ -111,6 +113,8 @@ function enhance() {
         caption.style.opacity = state.captions[i];
         caption.style.transform = `translateY(${(1 - state.captions[i]) * 7}px)`;
       });
+      // The final link must not receive focus or clicks while its scene is hidden.
+      finalCTA.inert = state.captions[7] < .99;
       state.traces.forEach((amount, i) => {
         // Stop the rounded shaft inside the head, never beyond its tip.
         // A fully hidden path must not leave a round-cap dot at its origin.

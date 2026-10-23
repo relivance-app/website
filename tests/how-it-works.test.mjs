@@ -87,7 +87,8 @@ test('the page keeps seven readable steps, optional goals and the original CTA w
   const page = readFileSync(new URL('../how-it-works/index.html', import.meta.url), 'utf8');
   for (const id of ['goal', 'milestones', 'network', 'prepare', 'meeting', 'recap', 'follow']) assert.match(page, new RegExp(`id="step-${id}"`));
   assert.match(page, /Start with a goal—or simply stay connected/);
-  assert.match(page, /Relivance is in pre-beta/);
+  assert.doesNotMatch(page, /Keep the connection\.|Relivance is in pre-beta|Private early access is opening soon/);
+  assert.match(page, /Your goals give direction\.[\s\S]*?<\/p><a class="how-button cta-feedback" href="\/#access-heading">Request Early Access<\/a>/);
   assert.doesNotMatch(page, /Read the overview|How does Relivance actually work|The whole picture|Scroll to continue|story-progress|data-step-dot|story-status|A look inside Relivance/);
   assert.match(page, /href="\/#access-heading"/);
   assert.match(page, /<link rel="canonical" href="https:\/\/relivance.app\/how-it-works\/"/);
