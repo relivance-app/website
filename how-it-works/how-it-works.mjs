@@ -1,4 +1,5 @@
-import { evaluateStory, NODE_IDS } from './story-motion.mjs';
+import { evaluateStory, NODE_IDS, POINTS } from './story-motion.mjs';
+import { circleConnections } from './story-geometry.mjs';
 
 const story = document.querySelector('[data-story]');
 const media = matchMedia('(prefers-reduced-motion: reduce)');
@@ -71,13 +72,17 @@ function enhance() {
       width: box.width, height: box.height, compact,
       start: story.getBoundingClientRect().top + window.scrollY - header, travel,
     };
-    // In short viewports labels retain their physical size while icons shrink.
-    // Keep the two lower side arcs clear of those labels at the complete view.
+    // Measure labels at the final zoom so their clearances remain consistent
+    // on phones. Trim circular arcs around text instead of deforming curves.
     const overview = evaluateStory(1, geometry);
-    const clearanceY = Math.max(790, 660 + overview.labelY + overview.labelSize * .25 + 6 / overview.scale);
-    const rise = 907 - clearanceY;
-    paths[3].setAttribute('d', `M770 ${clearanceY}C770 ${clearanceY + (904 - clearanceY) * .5} 740 880 706 904`);
-    paths[5].setAttribute('d', `M285 907C231 ${907 - rise * .35} 210 ${clearanceY + rise * .5} 210 ${clearanceY}`);
+    const labelRects = labels.map((label, i) => {
+      nodes[i].setAttribute('transform', `translate(${POINTS[i][0]} ${POINTS[i][1]})`);
+      label.style.fontSize = `${overview.labelSize}px`;
+      if (!label.classList.contains('spine-label')) label.setAttribute('y', overview.labelY);
+      const bounds = label.getBBox();
+      return { x: bounds.x + POINTS[i][0], y: bounds.y + POINTS[i][1], width: bounds.width, height: bounds.height };
+    });
+    circleConnections(labelRects, 4 / overview.scale).forEach(({ d }, i) => paths[i + 2].setAttribute('d', d));
     samples = paths.map(samplePath);
     svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
     lastProgress = -1;

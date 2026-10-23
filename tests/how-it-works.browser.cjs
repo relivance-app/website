@@ -58,7 +58,7 @@ async function verifyVisibleLabels(page) {
         if (hit) { arrowCollisions.push([path.dataset.trace, hit.text]); break; }
       }
     }
-    const crowded = labels.filter(({ gap }) => gap !== null && gap < 9);
+    const crowded = labels.filter(({ gap }) => gap !== null && (gap < 5 || gap > 9));
     return { outside, overlaps, crowded, arrowCollisions };
   });
   assert.deepEqual(result, { outside: [], overlaps: [], crowded: [], arrowCollisions: [] });
@@ -82,7 +82,7 @@ async function verifyVisibleLabels(page) {
     return { context, page };
   };
   try {
-    for (const [name, width, height] of [['desktop', 1440, 1000], ['phone', 390, 844], ['small-phone', 320, 568]]) {
+    for (const [name, width, height] of [['desktop', 1440, 1000], ['short-desktop', 1024, 700], ['phone', 390, 844], ['small-phone', 320, 568]]) {
       const { context, page } = await prepare({ viewport: { width, height } });
       const response = await page.goto(`${base}/how-it-works/`);
       assert.equal(response.status(), 200);

@@ -2,9 +2,25 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { evaluateStory, REVEALS, PATH_WINDOWS, SCENE_STARTS, POINTS } from '../how-it-works/story-motion.mjs';
+import { CIRCLE, CIRCLE_POINTS, circleConnections, circlePoint } from '../how-it-works/story-geometry.mjs';
 
 const desktop = { width: 1240, height: 724 };
 const phone = { width: 320, height: 294, compact: true };
+
+test('all relationship stations and connectors lie on one circle, including when trimmed for labels', () => {
+  const distance = ([x, y]) => Math.hypot(x - CIRCLE.x, y - CIRCLE.y);
+  for (const point of CIRCLE_POINTS) assert.ok(Math.abs(distance(point) - CIRCLE.radius) < 1e-9);
+  const normal = circleConnections();
+  const trimmed = circleConnections([{ x: 710, y: 720, width: 120, height: 80 }], 5);
+  assert.ok(trimmed[1].start > normal[1].start, 'prepare label should shorten the arc');
+  for (const connection of [...normal, ...trimmed]) {
+    assert.ok(connection.end > connection.start);
+    assert.match(connection.d, /A270 270 0 0 1/);
+    for (let angle = connection.start; angle <= connection.end; angle += .5) {
+      assert.ok(Math.abs(distance(circlePoint(angle)) - CIRCLE.radius) < 1e-9);
+    }
+  }
+});
 
 test('one scroll position reproduces the same frame after arbitrary forward and reverse seeks', () => {
   const stops = [0, .04, .15, .19, .29, .33, .46, .57, .65, .73, .81, .88, .95, 1];

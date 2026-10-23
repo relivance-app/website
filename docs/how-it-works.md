@@ -21,6 +21,7 @@ Files:
 - `how-it-works/how-it-works.css`: page-scoped design, sticky stage,
   responsive layout, static/reduced-motion and print presentations.
 - `how-it-works/story-motion.mjs`: pure scroll-progress-to-frame evaluator.
+- `how-it-works/story-geometry.mjs`: shared circular station and connector geometry.
 - `how-it-works/how-it-works.mjs`: DOM adapter, measurements and lifecycle.
 - `tests/how-it-works.test.mjs`: motion and content contracts.
 - `tests/how-it-works.browser.cjs`: optional real-browser regression runner.
@@ -63,8 +64,11 @@ path has normalized `pathLength="1"`; stroke-dashoffset draws the path. Shafts
 stop seven SVG units behind the tip, inside each arrowhead. Undrawn paths are
 explicitly hidden, preventing zero-length round caps from appearing as stray
 blue dots. Arrowhead points/tangents are cached on initialization and resize.
-The two lower side arcs adapt their clearance to the physical label size in
-short viewports. Scroll frames
+All five relationship stations lie on one 270-unit-radius circle. Their
+connectors are true SVG circular arcs on that same circle, so their curvature
+stays constant through the arrowheads. At measurement time, arcs are trimmed
+against actual label bounds, including interior intersections on short phones;
+they are never bent into hooks to clear text. Scroll frames
 write transforms, opacity, font size and stroke offset without layout reads.
 ResizeObserver, font readiness and viewport changes refresh cached geometry.
 Cleanup disconnects listeners and observers; pagehide preserves presentation
@@ -75,7 +79,8 @@ page so enhancement does not displace a restored scroll offset.
 
 Phones use a smaller close-up scale, independent caption layout, fixed physical
 12px overview labels, labels beside the goal spine, and a screen-space gap
-below circle icons that stays consistent as the camera zooms. `svh` stabilizes the
+below circle icons that stays consistent as the camera zooms (about 6px on
+phones and 7px on desktop). `svh` stabilizes the
 stage when mobile browser chrome changes. The whole diagram is fitted inside
 the graphic area while captions retain readable HTML sizes. Icons remain
 vector shapes. Desktop overview labels are 14px.
@@ -91,8 +96,8 @@ sequence. CTA text is white on the brand blue, matching the requested design.
 The text overview and its navigation link were removed following design
 review. The story now leads directly into early access; the full diagram
 still holds as the final animation frame. Seven dots replace the numerical
-readout, progress bar and scroll instructions. The recap-to-follow-through
-connector uses a broader, gradually turning curve.
+readout, progress bar and scroll instructions. Circle labels use the same close
+spacing, and all five connectors share a constant curvature.
 
 ## Product accuracy
 
@@ -146,11 +151,12 @@ Run syntax and automated checks with Node.js:
 ```sh
 node --check how-it-works/how-it-works.mjs
 node --check how-it-works/story-motion.mjs
+node --check how-it-works/story-geometry.mjs
 node --test tests/*.test.cjs tests/*.test.mjs
 git diff --check
 ```
 
-The 19 tests comprise 12 existing waitlist checks and seven new motion/content
+The 20 tests comprise 12 existing waitlist checks and eight new geometry/motion/content
 checks. The browser runner requires Playwright available to Node; it is a QA
 tool only and is never shipped to visitors. With Playwright installed outside
 the repository, set `NODE_PATH` to its containing `node_modules` directory.
@@ -166,7 +172,8 @@ Optional environment variables: `HOW_PREVIEW_URL` for another local server and
 The runner blocks non-preview network requests, never submits a waitlist
 entry, and checks:
 
-- Desktop 1440 × 1000, phone 390 × 844, and small phone 320 × 568.
+- Desktop 1440 × 1000, short desktop 1024 × 700, phone 390 × 844,
+  and small phone 320 × 568, plus a Retina desktop close-up at 1280 × 1100.
 - Exact forward/reverse state equality, paused-scroll stability, complete-view
   label bounds, icon-to-label spacing, label/arrow collisions, and no horizontal overflow.
 - Arrow shaft containment, fully hidden undrawn paths, seven progress dots and

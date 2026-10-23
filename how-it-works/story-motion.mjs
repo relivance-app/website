@@ -1,8 +1,9 @@
 // One scroll position -> one complete frame. No timers, inertia or autoplay.
+import { CIRCLE_POINTS } from './story-geometry.mjs';
+
 export const NODE_IDS = ['goal', 'milestones', 'network', 'prepare', 'meeting', 'recap', 'follow'];
 export const POINTS = [
-  [500, 90], [500, 285], [500, 480], [760, 660],
-  [660, 960], [340, 960], [240, 660],
+  [500, 90], [500, 285], ...CIRCLE_POINTS,
 ];
 export const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 export const mix = (a, b, t) => a + (b - a) * t;
@@ -48,6 +49,6 @@ export function evaluateStory(input, { width, height, compact = false }) {
     // Preserve physical text size as the world zooms out, especially on phones.
     labelSize: (compact ? 12 : 14) / scale,
     // Keep a real screen-space gap below each icon at every zoom level.
-    labelY: 55 + ((compact ? 10 : 14) + (compact ? 12 : 14)) / scale,
+    labelY: 55 + ((compact ? 6 : 7) + (compact ? 12 : 14) * .93) / scale,
   };
 }
