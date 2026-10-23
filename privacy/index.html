@@ -40,7 +40,7 @@
       </header>
 
       <h1 class="doc-title">Privacy Policy</h1>
-      <p class="doc-meta">Effective: <time datetime="2026-10-21">October 21, 2026</time></p>
+      <p class="doc-meta">Effective: <time datetime="2026-10-22">October 22, 2026</time></p>
 
       <section class="doc-section">
         <p>
@@ -148,10 +148,13 @@
       <section class="doc-section">
         <h2>4. What We Collect on the Website</h2>
         <p>
-          On the Website, the only personal information we collect is
-          the email address you choose to submit through the
-          early-access form, together with the date and time of
-          submission. We do not run advertising trackers, cross-site
+          When you use the early-access form, we store the email address
+          you choose to submit and the date and time of submission in
+          our dedicated EU-hosted waitlist Supabase database. Separately, Cloudflare
+          Turnstile processes technical request and browser/device data
+          to protect the form from automated abuse. The verification token
+          is checked by our server and is not stored in the waitlist.
+          We do not run advertising trackers, cross-site
           fingerprinting scripts, or analytics scripts on the Website.
           We do not use cookies on the Website for tracking.
         </p>
@@ -160,10 +163,10 @@
           record routine request data (IP address, browser type,
           referring page) for security and abuse prevention. Web font
           files for the Roboto typeface are served directly from
-          relivance.app — we do not load fonts, stylesheets, or scripts
-          from third-party content-delivery networks such as Google
-          Fonts, so visiting the Website does not expose your IP address
-          to a font provider.
+          relivance.app, so visiting the Website does not expose your IP
+          address to a font provider. The early-access form loads
+          Cloudflare’s Turnstile script for security verification, as
+          described in Section 9.
         </p>
         <p>
           The email address you submit is used only for: (a) sending you
@@ -427,16 +430,25 @@
         <p><strong>Website sub-processors:</strong></p>
         <ul>
           <li>
-            <strong>Formspree, Inc.</strong> (United States) — processes
-            the email submissions you make through the early-access form
-            on the Website, forwards them to our internal inbox, and
-            stores them in Formspree’s dashboard. Subject to
-            <a
-              href="https://formspree.io/legal/privacy-policy/"
-              rel="noopener noreferrer"
-              target="_blank"
-              >Formspree’s privacy policy</a
-            >.
+            <strong>Supabase</strong> (dedicated waitlist project hosted in
+            Central EU / Frankfurt, Germany) — receives early-access
+            submissions through a server-side Edge Function and stores
+            only the submitted email address and signup timestamp in an
+            isolated waitlist table, separate from App accounts and contacts.
+            Processing is governed by the applicable
+            <a href="https://supabase.com/legal/customer-resources/data-processing-addendum"
+              rel="noopener noreferrer" target="_blank">Supabase Data Processing Addendum</a>.
+          </li>
+          <li>
+            <strong>Cloudflare, Inc.</strong> — provides Turnstile security
+            verification for the early-access form. Cloudflare processes
+            technical request and browser/device data to detect automated
+            abuse. We send the verification token to Cloudflare for validation;
+            we do not send the submitted email address to Turnstile.
+            Cloudflare also processes security signals to improve Turnstile,
+            acting as a controller for that purpose.
+            See <a href="https://www.cloudflare.com/turnstile-privacy-policy/"
+              rel="noopener noreferrer" target="_blank">Cloudflare’s Turnstile Privacy Addendum</a>.
           </li>
           <li>
             <strong>GitHub, Inc.</strong> (a Microsoft subsidiary,
@@ -713,6 +725,14 @@
           enabled), Sentry, Apple, Google (if
           you connect it), or providers supporting our support and
           legal operations.
+        </p>
+        <p>
+          The Website’s dedicated waitlist database is hosted in Frankfurt,
+          Germany. Supabase Edge Functions may execute in regions near the
+          visitor, and Cloudflare processes Turnstile security signals through
+          its infrastructure. EU database hosting does not mean all Website
+          processing takes place in the EU. Applicable provider agreements
+          describe the safeguards for international transfers.
         </p>
         <p>
           Verification of the agreements and transfer arrangements
