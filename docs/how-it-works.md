@@ -98,7 +98,10 @@ button's shared interaction styles: opacity .94 on hover over 160ms and scale
 The text overview and its navigation link were removed following design
 review. The early-access button sits directly under the final scene's paragraph,
 inside the held complete view. It cannot receive focus or clicks until that
-scene is visible; static fallbacks keep it available. The separate closing
+scene is visible; static fallbacks keep it available. The closing text block
+has extra separation from the circle. Short phones use a 44px button and a
+slightly tighter paragraph-to-button gap to preserve room above the heading.
+The separate closing
 heading and release paragraph were removed following design review. The progress indicator and the
 “A look inside Relivance” eyebrow have been removed. Circle labels use the same close
 spacing, and all five connectors share a constant curvature.
@@ -184,6 +187,8 @@ entry, and checks:
   both CTA hover styles against the homepage button.
 - Final CTA placement and clipping before/after resize, hidden-link keyboard
   containment, and final-button navigation to the existing homepage form.
+- Additional screenshot checks in narrow desktop windows at 640 × 620,
+  700 × 580 and 800 × 650 verify the closing text spacing and button fit.
 - Reload and browser-back restoration midway through the animation, resizing,
   and switching reduced motion on and off.
 - Reduced-motion, disabled-JavaScript and failed-module static presentations.

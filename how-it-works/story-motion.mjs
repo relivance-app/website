@@ -46,7 +46,8 @@ export function evaluateStory(input, { width, height, compact = false }) {
     // Give the closing caption room in short viewports without shrinking text.
     y: translateY - (height < 500 ? 12 * captions[7] : 0),
     opacity, traces, captions,
-    captionLift: (1 - zoom) * Math.min(compact ? 120 : 200, height * .28) + 32 * captions[7],
+    captionLift: (1 - zoom) * Math.min(compact ? 120 : 200, height * .28)
+      + (compact ? (height <= 336 ? 24 : 20) : 16) * captions[7],
     labelOpacity: ease(phase(p, .405, .50)),
     // Preserve physical text size as the world zooms out, especially on phones.
     labelSize: (compact ? 12 : 14) / scale,

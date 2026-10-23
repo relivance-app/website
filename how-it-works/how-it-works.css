@@ -109,6 +109,9 @@ body.how-page {
   .how-story[data-enhanced] .scene-caption h2 { font-size: 25px; }
   .how-story[data-enhanced] .scene-caption p { font-size: 15px; }
 }
+@media (max-width: 600px) and (max-height: 600px) {
+  .how-page .how-button { min-height: 44px; padding-block: 12px; margin-top: 14px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .how-page *, .how-page *::before { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
 }

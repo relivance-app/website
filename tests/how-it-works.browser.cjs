@@ -39,11 +39,11 @@ async function verifyFinalCTA(page) {
     const paragraph = button.previousElementSibling.getBoundingClientRect();
     const heading = button.parentNode.querySelector('h2').getBoundingClientRect();
     const labelBottom = Math.max(...[...document.querySelectorAll('.node-label')].map((label) => label.getBoundingClientRect().bottom));
-    return { gap: box.top - paragraph.bottom, graphicGap: heading.top - labelBottom, bottom: box.bottom, viewport: innerHeight, inert: button.inert };
+    return { gap: box.top - paragraph.bottom, graphicGap: heading.top - labelBottom, bottom: box.bottom, viewport: innerHeight, compactButton: matchMedia('(max-width: 600px) and (max-height: 600px)').matches, inert: button.inert };
   });
-  assert.ok(Math.abs(placement.gap - 18) < 1, 'Final CTA is not directly below its paragraph');
+  assert.ok(Math.abs(placement.gap - (placement.compactButton ? 14 : 18)) < 1, 'Final CTA is not directly below its paragraph');
   assert.ok(placement.bottom <= placement.viewport - 6, 'Final CTA is clipped');
-  assert.ok(placement.graphicGap >= 8, 'Closing caption crowds the diagram');
+  assert.ok(placement.graphicGap >= (placement.compactButton ? 19 : 28), 'Closing caption crowds the diagram');
   assert.equal(placement.inert, false);
 }
 async function verifyVisibleLabels(page) {
