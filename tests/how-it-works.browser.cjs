@@ -24,6 +24,9 @@ async function snapshot(page) {
     scene: root.dataset.scene,
     camera: root.querySelector('[data-world]').getAttribute('transform'),
     paths: [...root.querySelectorAll('[data-trace]')].map((p) => p.style.strokeDashoffset),
+    pathOpacity: [...root.querySelectorAll('[data-trace]')].map((p) => p.style.opacity),
+    heads: [...root.querySelectorAll('[data-arrowhead]')].map((p) => [p.style.opacity, p.getAttribute('transform')]),
+    dots: [...root.querySelectorAll('[data-step-dot]')].map((dot) => dot.dataset.state),
     nodes: [...root.querySelectorAll('[data-node]')].map((node) => node.style.opacity),
     captions: [...root.querySelectorAll('.scene-caption')].map((node) => node.style.opacity),
   }));
@@ -36,6 +39,7 @@ async function verifyVisibleLabels(page) {
     const box = svg.getBoundingClientRect();
     const labels = [...svg.querySelectorAll('.node-label')].map((label) => ({
       text: label.textContent, rect: label.getBoundingClientRect().toJSON(),
+      gap: label.classList.contains('spine-label') ? null : label.getBoundingClientRect().top - label.parentNode.querySelector('.node-disc').getBoundingClientRect().bottom,
     }));
     const outside = labels.filter(({ rect: r }) => r.left < box.left - 1 || r.right > box.right + 1 || r.top < box.top - 1 || r.bottom > box.bottom + 1);
     const overlaps = [];
@@ -43,9 +47,21 @@ async function verifyVisibleLabels(page) {
       const a = labels[i].rect, b = labels[j].rect;
       if (a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top) overlaps.push([labels[i].text, labels[j].text]);
     }
-    return { outside, overlaps };
+    const arrowCollisions = [];
+    for (const path of svg.querySelectorAll('[data-trace]')) {
+      const length = path.getTotalLength();
+      const matrix = path.getScreenCTM();
+      for (let i = 0; i <= 100; i++) {
+        const point = path.getPointAtLength(length * i / 100);
+        const screen = new DOMPoint(point.x, point.y).matrixTransform(matrix);
+        const hit = labels.find(({ rect }) => screen.x > rect.left - 2 && screen.x < rect.right + 2 && screen.y > rect.top - 2 && screen.y < rect.bottom + 2);
+        if (hit) { arrowCollisions.push([path.dataset.trace, hit.text]); break; }
+      }
+    }
+    const crowded = labels.filter(({ gap }) => gap !== null && gap < 9);
+    return { outside, overlaps, crowded, arrowCollisions };
   });
-  assert.deepEqual(result, { outside: [], overlaps: [] });
+  assert.deepEqual(result, { outside: [], overlaps: [], crowded: [], arrowCollisions: [] });
 }
 
 (async () => {
@@ -79,9 +95,24 @@ async function verifyVisibleLabels(page) {
         await seek(page, p);
         snapshots.set(p, await snapshot(page));
         await noOverflow(page);
-        if ([.04, .33, .57, .95].includes(p)) await page.screenshot({ path: path.join(output, `${name}-${p}.png`) });
+        if (p === .19) {
+          const tipGap = await page.locator('[data-trace]').first().evaluate((path) => {
+            const length = path.getTotalLength();
+            const end = path.getPointAtLength(length * (1 - Number(path.style.strokeDashoffset)));
+            const tip = document.querySelector('[data-arrowhead]').transform.baseVal.consolidate().matrix;
+            return Math.hypot(tip.e - end.x, tip.f - end.y);
+          });
+          assert.ok(tipGap > 6 && tipGap < 8, 'Arrow shaft extends through its tip');
+        }
+        if (p === .33) {
+          const hidden = await page.locator('[data-trace]').evaluateAll((paths) => paths.slice(2).map((path) => getComputedStyle(path).opacity));
+          assert.deepEqual(hidden, Array(5).fill('0'), 'Undrawn connectors leave blue dots');
+        }
+        if ([.04, .19, .33, .57, .81, .95].includes(p)) await page.screenshot({ path: path.join(output, `${name}-${p}.png`) });
       }
       await verifyVisibleLabels(page);
+      assert.deepEqual(await page.locator('[data-step-dot]').evaluateAll((dots) => dots.map((dot) => dot.dataset.state)), Array(7).fill('complete'));
+      for (const selector of ['.nav-access', '.how-button']) assert.equal(await page.locator(selector).evaluate((button) => getComputedStyle(button).color), 'rgb(255, 255, 255)');
       for (const p of [...stops].reverse()) {
         await seek(page, p);
         assert.deepEqual(await snapshot(page), snapshots.get(p), `${name}: reverse mismatch at ${p}`);

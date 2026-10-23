@@ -47,5 +47,7 @@ export function evaluateStory(input, { width, height, compact = false }) {
     labelOpacity: ease(phase(p, .405, .50)),
     // Preserve physical text size as the world zooms out, especially on phones.
     labelSize: (compact ? 12 : 14) / scale,
+    // Keep a real screen-space gap below each icon at every zoom level.
+    labelY: 55 + ((compact ? 10 : 14) + (compact ? 12 : 14)) / scale,
   };
 }

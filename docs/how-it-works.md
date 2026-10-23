@@ -11,8 +11,8 @@ The supplied 1200 × 2200 SVG, PNG and PDF are preserved in
 `assets/how-it-works/`. The page reconstructs the illustration as reusable SVG
 `symbol` glyphs, seven independent station groups, seven connector paths,
 moving arrowheads, and semantic HTML captions. It does not animate a poster.
-Only the SVG reference is linked; the other two files are not downloaded by
-the page. Roboto and the authentic logo come from the existing local assets.
+The source reference files are not downloaded by the page. Roboto and the
+authentic logo come from the existing local assets.
 The animation uses Relivance active blue **#5997DF** on white.
 
 Files:
@@ -59,8 +59,12 @@ responsive to stage height). The final 9% holds the complete view.
 | .91–1 | Complete composition holds before normal document flow resumes. |
 
 Node reveals and caption crossfades overlap the relevant path segments. Each
-path has normalized `pathLength="1"`; stroke-dashoffset draws the path.
-Arrowhead points/tangents are sampled once on initialization. Scroll frames
+path has normalized `pathLength="1"`; stroke-dashoffset draws the path. Shafts
+stop seven SVG units behind the tip, inside each arrowhead. Undrawn paths are
+explicitly hidden, preventing zero-length round caps from appearing as stray
+blue dots. Arrowhead points/tangents are cached on initialization and resize.
+The two lower side arcs adapt their clearance to the physical label size in
+short viewports. Scroll frames
 write transforms, opacity, font size and stroke offset without layout reads.
 ResizeObserver, font readiness and viewport changes refresh cached geometry.
 Cleanup disconnects listeners and observers; pagehide preserves presentation
@@ -70,27 +74,35 @@ page so enhancement does not displace a restored scroll offset.
 ### Mobile and accessibility
 
 Phones use a smaller close-up scale, independent caption layout, fixed physical
-12px overview labels, and labels beside the goal spine. `svh` stabilizes the
+12px overview labels, labels beside the goal spine, and a screen-space gap
+below circle icons that stays consistent as the camera zooms. `svh` stabilizes the
 stage when mobile browser chrome changes. The whole diagram is fitted inside
 the graphic area while captions retain readable HTML sizes. Icons remain
 vector shapes. Desktop overview labels are 14px.
 
 The ordered HTML sequence is the default presentation. Reduced motion, missing
 JavaScript, unsupported sticky positioning, a blocked module or initialization
-failure leave all seven steps readable. A skip link leads directly to the
-explanation. The decorative SVG and scroll status are hidden from assistive
+failure leave all seven steps readable. A skip link leads directly to early
+access. The decorative SVG and seven-dot progress indicator are hidden from assistive
 technology; semantic headings and descriptions are always in the DOM. There
 are no live announcements on every scroll frame. Print restores the full text
-sequence. CTA text is dark on the brand blue for readable contrast.
+sequence. CTA text is white on the brand blue, matching the requested design.
+
+The text overview and its navigation link were removed following design
+review. The story now leads directly into early access; the full diagram
+still holds as the final animation frame. Seven dots replace the numerical
+readout, progress bar and scroll instructions. The recap-to-follow-through
+connector uses a broader, gradually turning curve.
 
 ## Product accuracy
 
 This is an **intended product journey**, not a claim that every pre-beta
-capability is enabled. Goals are explicitly optional in the introduction and
-explanation. The page explains user-supplied inputs and does not promise
+capability is enabled. The introduction says visitors can start with a goal
+or simply stay connected. The page does not promise
 passive recording, universal correspondence integrations, automatic outreach,
-automatic goal changes or guaranteed outcomes. The pre-beta note stays below
-the animation rather than complicating its diagram.
+automatic goal changes or guaranteed outcomes. The early-access line identifies
+Relivance as pre-beta. Detailed implementation qualifications remain in these
+review notes rather than the removed text overview.
 
 Copy was checked against the iOS repository's `origin/main` snapshot
 `8493cd5250b1a91d256d4efef2c8c4c4bb237d3e` on 2026-10-23:
@@ -106,8 +118,8 @@ Copy was checked against the iOS repository's `origin/main` snapshot
   default off. Existing on-demand paths and new gated paths must not be
   conflated.
 - `RecapIntelligenceWriter.swift`: legacy automatic downstream writes are
-  fenced by `LegacyRecapDerivation.automaticWritesPermitted`. The page says
-  users record and follow up on agreements; it does not promise that every
+  fenced by `LegacyRecapDerivation.automaticWritesPermitted`. The page asks
+  users to save recaps and follow up on agreements; it does not promise that every
   recap automatically creates tasks.
 - `Relivance/GoalCoachService.swift`, `Relivance/ContextCoachService.swift`
   and the corresponding coach flow: clarification and starting-point context
@@ -156,7 +168,9 @@ entry, and checks:
 
 - Desktop 1440 × 1000, phone 390 × 844, and small phone 320 × 568.
 - Exact forward/reverse state equality, paused-scroll stability, complete-view
-  label bounds and collisions, and no horizontal overflow.
+  label bounds, icon-to-label spacing, label/arrow collisions, and no horizontal overflow.
+- Arrow shaft containment, fully hidden undrawn paths, seven progress dots and
+  white CTA text.
 - Reload and browser-back restoration midway through the animation, resizing,
   and switching reduced motion on and off.
 - Reduced-motion, disabled-JavaScript and failed-module static presentations.

@@ -52,27 +52,28 @@ test('the complete system fits both a desktop and a short phone viewport', () =>
       assert.ok(state.x + (x - 55) * state.scale >= 0);
       assert.ok(state.x + (x + 55) * state.scale <= size.width);
       assert.ok(state.y + (y - 55) * state.scale >= 0);
-      assert.ok(state.y + (y + 84) * state.scale <= size.height);
+      assert.ok(state.y + (y + state.labelY) * state.scale <= size.height);
     }
-    assert.equal(state.labelSize * state.scale, size.compact ? 12 : 14);
+    assert.ok(Math.abs(state.labelSize * state.scale - (size.compact ? 12 : 14)) < 1e-10);
   }
 });
 
 test('state is finite and bounded, including out-of-range or invalid scroll values', () => {
   for (const p of [-2, 0, NaN, .02, .41, .9, 1, 8]) {
     const state = evaluateStory(p, phone);
-    for (const n of [state.x, state.y, state.scale, state.labelSize]) assert.ok(Number.isFinite(n));
+    for (const n of [state.x, state.y, state.scale, state.labelSize, state.labelY]) assert.ok(Number.isFinite(n));
     for (const n of [...state.opacity, ...state.captions, ...state.traces, state.progress]) assert.ok(n >= 0 && n <= 1);
     assert.ok(Math.abs(state.captions.reduce((a, b) => a + b, 0) - 1) < 1e-12);
   }
 });
 
-test('the static page preserves all seven steps, optional goals, truthful pre-beta scope and original CTA', () => {
+test('the page keeps seven readable steps, optional goals and the original CTA without the removed overview', () => {
   const page = readFileSync(new URL('../how-it-works/index.html', import.meta.url), 'utf8');
   for (const id of ['goal', 'milestones', 'network', 'prepare', 'meeting', 'recap', 'follow']) assert.match(page, new RegExp(`id="step-${id}"`));
-  assert.match(page, /Goals are optional/);
-  assert.match(page, /attach an audio file/);
-  assert.match(page, /still being completed and verified/);
+  assert.match(page, /Start with a goal—or simply stay connected/);
+  assert.match(page, /Relivance is in pre-beta/);
+  assert.equal((page.match(/data-step-dot/g) || []).length, 7);
+  assert.doesNotMatch(page, /Read the overview|How does Relivance actually work|The whole picture|Scroll to continue|story-progress/);
   assert.match(page, /href="\/#access-heading"/);
   assert.match(page, /<link rel="canonical" href="https:\/\/relivance.app\/how-it-works\/"/);
   assert.doesNotMatch(page, /cdn\.|unpkg|<video|<canvas/);

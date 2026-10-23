@@ -19,7 +19,7 @@ function enhance() {
   const captionGroup = story.querySelector('.story-captions');
   const paths = [...story.querySelectorAll('[data-trace]')];
   const heads = [...story.querySelectorAll('[data-arrowhead]')];
-  const readout = story.querySelector('[data-readout]');
+  const dots = [...story.querySelectorAll('[data-step-dot]')];
   let raf = 0;
   let pendingMeasure = false;
   let geometry;
@@ -27,18 +27,20 @@ function enhance() {
   let lastScene = -1;
   let dead = false;
   let observer;
+  let samples;
 
-  // Cache path samples once. Scroll frames perform no geometry reads.
-  const samples = paths.map((path) => {
+  // Cache on measurement only. Scroll frames perform no geometry reads.
+  const samplePath = (path) => {
     const length = path.getTotalLength();
-    return Array.from({ length: 201 }, (_, i) => {
+    const points = Array.from({ length: 201 }, (_, i) => {
       const at = length * i / 200;
       const a = path.getPointAtLength(Math.max(0, at - .5));
       const b = path.getPointAtLength(Math.min(length, at + .5));
       const point = path.getPointAtLength(at);
       return { x: point.x, y: point.y, angle: Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI };
     });
-  });
+    return { length, points };
+  };
 
   function restore(preservePresentation = false) {
     dead = true;
@@ -55,7 +57,7 @@ function enhance() {
     story.removeAttribute('style');
     captions.forEach((caption) => caption.removeAttribute('style'));
     captionGroup.removeAttribute('style');
-    readout.textContent = '';
+    dots.forEach((dot) => dot.removeAttribute('data-state'));
   }
 
   function measure() {
@@ -69,6 +71,14 @@ function enhance() {
       width: box.width, height: box.height, compact,
       start: story.getBoundingClientRect().top + window.scrollY - header, travel,
     };
+    // In short viewports labels retain their physical size while icons shrink.
+    // Keep the two lower side arcs clear of those labels at the complete view.
+    const overview = evaluateStory(1, geometry);
+    const clearanceY = Math.max(790, 660 + overview.labelY + overview.labelSize * .25 + 6 / overview.scale);
+    const rise = 907 - clearanceY;
+    paths[3].setAttribute('d', `M770 ${clearanceY}C770 ${clearanceY + (904 - clearanceY) * .5} 740 880 706 904`);
+    paths[5].setAttribute('d', `M285 907C231 ${907 - rise * .35} 210 ${clearanceY + rise * .5} 210 ${clearanceY}`);
+    samples = paths.map(samplePath);
     svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
     lastProgress = -1;
   }
@@ -91,6 +101,7 @@ function enhance() {
       labels.forEach((label) => {
         label.style.opacity = state.labelOpacity;
         label.style.fontSize = `${state.labelSize}px`;
+        if (!label.classList.contains('spine-label')) label.setAttribute('y', state.labelY);
       });
       captionGroup.style.transform = `translateY(${-state.captionLift}px)`;
       captions.forEach((caption, i) => {
@@ -98,17 +109,20 @@ function enhance() {
         caption.style.transform = `translateY(${(1 - state.captions[i]) * 7}px)`;
       });
       state.traces.forEach((amount, i) => {
-        paths[i].style.strokeDashoffset = 1 - amount;
-        heads[i].style.opacity = amount > .01 ? 1 : 0;
-        const sample = samples[i][Math.round(amount * 200)];
+        // Stop the rounded shaft inside the head, never beyond its tip.
+        // A fully hidden path must not leave a round-cap dot at its origin.
+        const shaft = Math.max(0, amount - 7 / samples[i].length);
+        paths[i].style.strokeDashoffset = 1 - shaft;
+        paths[i].style.opacity = shaft > 0 ? 1 : 0;
+        heads[i].style.opacity = amount * samples[i].length > 7 ? 1 : 0;
+        const sample = samples[i].points[Math.round(amount * 200)];
         heads[i].setAttribute('transform', `translate(${sample.x} ${sample.y}) rotate(${sample.angle})`);
       });
       if (lastScene !== state.scene) {
         lastScene = state.scene;
-        readout.textContent = state.scene === 7 ? 'The whole picture' : `${String(state.scene + 1).padStart(2, '0')} / 07`;
+        dots.forEach((dot, i) => { dot.dataset.state = i < state.scene ? 'complete' : i === state.scene ? 'current' : 'upcoming'; });
         story.dataset.scene = state.scene === 7 ? 'complete' : NODE_IDS[state.scene];
       }
-      story.style.setProperty('--story-progress', state.progress);
       story.dataset.progress = state.progress.toFixed(5);
     } catch {
       restore(); // Static semantic content remains available if enhancement fails.
