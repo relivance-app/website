@@ -88,13 +88,15 @@ variant. Logo, palette, and form pill swap together; no reload required.
 
 ## Early-access form — first-party waitlist
 
-The website submits email to the existing EU Supabase `waitlist-signup` Edge
-Function. It stores only email and the original signup timestamp in the isolated
+The website submits email to the dedicated waitlist project's `waitlist-signup` Edge
+Function at `https://uvujqophgbujljapifdv.supabase.co/functions/v1/waitlist-signup`.
+It stores only email and the original signup timestamp in the isolated
 `public.waitlist` table. There is no browser database client or Supabase key.
 
 `waitlist.js` maintains inline loading/error/success announcements and checks
-Cloudflare Turnstile before signup. `index.html` deliberately ships with an empty
-`data-turnstile-sitekey`: submissions stay disabled until approved setup.
+Cloudflare Turnstile before signup. `index.html` contains the approved production
+public site key. No private secret belongs in the website. This local source is
+not published; backend verification and separate cutover approval remain required.
 
 Before separately authorized website cutover:
 
@@ -102,8 +104,11 @@ Before separately authorized website cutover:
    Keep pre-clearance off. Its public site key belongs in `data-turnstile-sitekey`
    in `index.html`; its secret belongs only in the backend function environment
    as `WAITLIST_TURNSTILE_SECRET`. Do not use Cloudflare test keys in production.
-2. Backend owner reviews and deploys only `waitlist-signup` to the existing EU
-   project, with `verify_jwt = false`. The handler is intentionally public and
+2. Backend owner reviews and separately authorizes deployment of only
+   `waitlist-signup` to project `uvujqophgbujljapifdv`, with `verify_jwt = false`.
+   Confirm this new project's exact EU database region before publishing the
+   existing EU/Frankfurt disclosure. The original application project must never
+   be a signup destination or fallback. The handler is intentionally public and
    validates Turnstile server-side (hostname `relivance.app`, action
    `waitlist_signup`, single-use verification and a five-minute lifetime).
 3. Verify backend operation/security first under a separately approved plan.

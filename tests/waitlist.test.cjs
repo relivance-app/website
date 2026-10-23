@@ -39,6 +39,7 @@ test('success normalizes email and preserves inline accessible success', async (
   const f = fixture(); f.ids.email.value = '  Name+Tag@Example.com ';
   f.callbacks.callback('opaque-token'); await f.submit();
   assert.equal(f.calls.length, 1);
+  assert.equal(f.calls[0].url, 'https://uvujqophgbujljapifdv.supabase.co/functions/v1/waitlist-signup');
   assert.deepEqual(JSON.parse(f.calls[0].init.body), {email:'name+tag@example.com',captchaToken:'opaque-token',website:''});
   assert.equal(f.calls[0].init.credentials,'omit');
   assert.equal(f.form.dataset.state,'success'); assert.equal(f.ids.email.disabled,true);

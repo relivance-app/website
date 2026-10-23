@@ -9,7 +9,7 @@
   const error = document.getElementById("access-error");
   const success = document.getElementById("access-success");
   const sitekey = form.dataset.turnstileSitekey;
-  const endpoint = "https://bysacexozeengpdgurqv.supabase.co/functions/v1/waitlist-signup";
+  const endpoint = "https://uvujqophgbujljapifdv.supabase.co/functions/v1/waitlist-signup";
   let token = "";
   let widget;
   let pending = false;
