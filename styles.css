@@ -801,7 +801,7 @@ body.doc .footer {
   line-height: 1.5;
   text-align: center;
 }
-.access-purpose a { color: var(--wv-accent); }
+.access-purpose a { color: inherit; }
 .access-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .access-captcha { width: 100%; }
 .access-captcha:empty { display: none; }
