@@ -20,7 +20,6 @@ function enhance() {
   const captionGroup = story.querySelector('.story-captions');
   const paths = [...story.querySelectorAll('[data-trace]')];
   const heads = [...story.querySelectorAll('[data-arrowhead]')];
-  const dots = [...story.querySelectorAll('[data-step-dot]')];
   let raf = 0;
   let pendingMeasure = false;
   let geometry;
@@ -58,7 +57,6 @@ function enhance() {
     story.removeAttribute('style');
     captions.forEach((caption) => caption.removeAttribute('style'));
     captionGroup.removeAttribute('style');
-    dots.forEach((dot) => dot.removeAttribute('data-state'));
   }
 
   function measure() {
@@ -125,7 +123,6 @@ function enhance() {
       });
       if (lastScene !== state.scene) {
         lastScene = state.scene;
-        dots.forEach((dot, i) => { dot.dataset.state = i < state.scene ? 'complete' : i === state.scene ? 'current' : 'upcoming'; });
         story.dataset.scene = state.scene === 7 ? 'complete' : NODE_IDS[state.scene];
       }
       story.dataset.progress = state.progress.toFixed(5);

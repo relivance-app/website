@@ -88,15 +88,17 @@ vector shapes. Desktop overview labels are 14px.
 The ordered HTML sequence is the default presentation. Reduced motion, missing
 JavaScript, unsupported sticky positioning, a blocked module or initialization
 failure leave all seven steps readable. A skip link leads directly to early
-access. The decorative SVG and seven-dot progress indicator are hidden from assistive
+access. The decorative SVG is hidden from assistive
 technology; semantic headings and descriptions are always in the DOM. There
 are no live announcements on every scroll frame. Print restores the full text
-sequence. CTA text is white on the brand blue, matching the requested design.
+sequence. CTA text is white on the brand blue. Both links reuse the homepage
+button's shared interaction styles: opacity .94 on hover over 160ms and scale
+.985 on press over 80ms. Reduced motion disables these transitions on this page.
 
 The text overview and its navigation link were removed following design
 review. The story now leads directly into early access; the full diagram
-still holds as the final animation frame. Seven dots replace the numerical
-readout, progress bar and scroll instructions. Circle labels use the same close
+still holds as the final animation frame. The progress indicator and the
+“A look inside Relivance” eyebrow have been removed. Circle labels use the same close
 spacing, and all five connectors share a constant curvature.
 
 ## Product accuracy
@@ -176,8 +178,9 @@ entry, and checks:
   and small phone 320 × 568, plus a Retina desktop close-up at 1280 × 1100.
 - Exact forward/reverse state equality, paused-scroll stability, complete-view
   label bounds, icon-to-label spacing, label/arrow collisions, and no horizontal overflow.
-- Arrow shaft containment, fully hidden undrawn paths, seven progress dots and
-  white CTA text.
+- Arrow shaft containment, fully hidden undrawn paths and white CTA text.
+- The cleaned-up header and removed progress UI; manual browser comparison of
+  both CTA hover styles against the homepage button.
 - Reload and browser-back restoration midway through the animation, resizing,
   and switching reduced motion on and off.
 - Reduced-motion, disabled-JavaScript and failed-module static presentations.

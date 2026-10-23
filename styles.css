@@ -344,16 +344,22 @@ body {
   font-weight: 600;
   letter-spacing: 0.01em;
   cursor: pointer;
-  transition: opacity 160ms ease, transform 80ms ease;
   -webkit-appearance: none;
   appearance: none;
 }
 
-.access-submit:hover {
+.access-submit,
+.cta-feedback {
+  transition: opacity 160ms ease, transform 80ms ease;
+}
+
+.access-submit:hover,
+.cta-feedback:hover {
   opacity: 0.94;
 }
 
-.access-submit:active {
+.access-submit:active,
+.cta-feedback:active {
   transform: scale(0.985);
 }
 

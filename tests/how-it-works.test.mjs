@@ -88,8 +88,7 @@ test('the page keeps seven readable steps, optional goals and the original CTA w
   for (const id of ['goal', 'milestones', 'network', 'prepare', 'meeting', 'recap', 'follow']) assert.match(page, new RegExp(`id="step-${id}"`));
   assert.match(page, /Start with a goal—or simply stay connected/);
   assert.match(page, /Relivance is in pre-beta/);
-  assert.equal((page.match(/data-step-dot/g) || []).length, 7);
-  assert.doesNotMatch(page, /Read the overview|How does Relivance actually work|The whole picture|Scroll to continue|story-progress/);
+  assert.doesNotMatch(page, /Read the overview|How does Relivance actually work|The whole picture|Scroll to continue|story-progress|data-step-dot|story-status|A look inside Relivance/);
   assert.match(page, /href="\/#access-heading"/);
   assert.match(page, /<link rel="canonical" href="https:\/\/relivance.app\/how-it-works\/"/);
   assert.doesNotMatch(page, /cdn\.|unpkg|<video|<canvas/);

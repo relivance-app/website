@@ -26,7 +26,6 @@ async function snapshot(page) {
     paths: [...root.querySelectorAll('[data-trace]')].map((p) => p.style.strokeDashoffset),
     pathOpacity: [...root.querySelectorAll('[data-trace]')].map((p) => p.style.opacity),
     heads: [...root.querySelectorAll('[data-arrowhead]')].map((p) => [p.style.opacity, p.getAttribute('transform')]),
-    dots: [...root.querySelectorAll('[data-step-dot]')].map((dot) => dot.dataset.state),
     nodes: [...root.querySelectorAll('[data-node]')].map((node) => node.style.opacity),
     captions: [...root.querySelectorAll('.scene-caption')].map((node) => node.style.opacity),
   }));
@@ -111,7 +110,6 @@ async function verifyVisibleLabels(page) {
         if ([.04, .19, .33, .57, .81, .95].includes(p)) await page.screenshot({ path: path.join(output, `${name}-${p}.png`) });
       }
       await verifyVisibleLabels(page);
-      assert.deepEqual(await page.locator('[data-step-dot]').evaluateAll((dots) => dots.map((dot) => dot.dataset.state)), Array(7).fill('complete'));
       for (const selector of ['.nav-access', '.how-button']) assert.equal(await page.locator(selector).evaluate((button) => getComputedStyle(button).color), 'rgb(255, 255, 255)');
       for (const p of [...stops].reverse()) {
         await seek(page, p);
