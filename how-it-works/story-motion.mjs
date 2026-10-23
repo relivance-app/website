@@ -43,8 +43,8 @@ export function evaluateStory(input, { width, height, compact = false }) {
   return {
     progress: p, scene, zoom, scale,
     x: width / 2 - 500 * scale,
-    // Give the closing caption room on short phones without shrinking its text.
-    y: translateY - (compact && height < 330 ? 12 * captions[7] : 0),
+    // Give the closing caption room in short viewports without shrinking text.
+    y: translateY - (height < 500 ? 12 * captions[7] : 0),
     opacity, traces, captions,
     captionLift: (1 - zoom) * Math.min(compact ? 120 : 200, height * .28) + 32 * captions[7],
     labelOpacity: ease(phase(p, .405, .50)),
