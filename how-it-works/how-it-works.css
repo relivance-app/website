@@ -1,0 +1,143 @@
+/* Page-scoped additions; the landing page and waitlist retain their styles. */
+body.how-page {
+  --how-blue: #5997df;
+  --how-pale: #eef5fc;
+  --how-ink: #1d1f27;
+  --how-secondary: #626773;
+  --how-nav-height: 76px;
+  display: block;
+  background: #fff;
+  color: var(--how-ink);
+  color-scheme: light;
+  /* Enhancement changes story height; retain the browser's restored scrollY. */
+  overflow-anchor: none;
+}
+.how-page * { box-sizing: border-box; }
+.how-page a { -webkit-tap-highlight-color: transparent; }
+.how-page a:focus-visible { outline: 3px solid var(--how-blue); outline-offset: 5px; border-radius: 3px; }
+.how-page .skip-link { position: fixed; top: -100px; left: 24px; z-index: 30; background: #fff; padding: 14px 20px; }
+.how-page .skip-link:focus { top: 12px; }
+.how-nav {
+  position: sticky;
+  top: 0;
+  height: var(--how-nav-height);
+  padding: 0 max(24px, calc((100vw - 1120px) / 2));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  z-index: 20;
+  background: rgba(255,255,255,.96);
+  border-bottom: 1px solid #f0f1f3;
+}
+.how-home { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--how-ink); font-size: 22px; font-weight: 600; letter-spacing: -.025em; }
+.how-home img { display: block; width: 30px; height: 30px; }
+.how-nav nav { display: flex; align-items: center; gap: 26px; font-size: 13px; }
+.how-nav nav a { color: var(--how-ink); text-decoration: none; }
+.how-nav .nav-access { padding: 10px 17px; border-radius: 999px; background: var(--how-blue); color: var(--how-ink); }
+.how-hero { max-width: 1000px; margin: auto; padding: clamp(70px, 12vh, 140px) 24px 64px; text-align: center; }
+.how-eyebrow { margin: 0 0 22px; color: var(--how-secondary); font-size: 13px; font-weight: 500; letter-spacing: .04em; }
+.how-hero h1 { max-width: 950px; margin: 0 auto; font-size: clamp(37px, 5.6vw, 68px); font-weight: 500; line-height: 1.08; letter-spacing: -.045em; text-wrap: balance; }
+.how-intro { max-width: 560px; margin: 27px auto 0; font-size: clamp(17px, 1.8vw, 20px); line-height: 1.6; color: var(--how-secondary); text-wrap: pretty; }
+.how-hero-links { display: flex; align-items: center; justify-content: center; gap: 24px; margin-top: 32px; font-size: 14px; }
+.how-hero-links a { color: var(--how-ink); text-decoration-color: #c4c8ce; text-underline-offset: 5px; }
+.how-hero-links .scroll-cue { display: none; color: var(--how-secondary); }
+.how-page:has([data-enhanced]) .scroll-cue { display: inline; }
+.icon-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* Static is the default: same semantic copy, no JS or animation required. */
+.how-story { position: relative; max-width: 1240px; margin: 0 auto; }
+.story-viewport, .story-status { display: none; }
+.story-captions { list-style: none; margin: 0; padding: 24px; max-width: 860px; margin-inline: auto; }
+.scene-caption { margin: 0; padding: 38px 0; display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 26px; align-items: center; border-bottom: 1px solid #eef0f3; }
+.scene-caption .static-icon { width: 88px; height: 88px; color: var(--how-blue); background: var(--how-pale); border-radius: 50%; padding: 20px; }
+.scene-caption h2 { margin: 0 0 11px; font-size: clamp(25px, 3.3vw, 37px); line-height: 1.15; letter-spacing: -.025em; font-weight: 500; text-wrap: balance; }
+.scene-caption p { margin: 0; color: var(--how-secondary); font-size: 18px; line-height: 1.55; text-wrap: pretty; }
+.scene-caption.overview-caption { grid-template-columns: 1fr; padding-block: 52px; text-align: center; }
+
+/* Native sticky pins the stage; its height is driven by a stable small viewport. */
+.how-story[data-enhanced] .story-sticky {
+  position: sticky;
+  top: var(--how-nav-height);
+  height: calc(100svh - var(--how-nav-height));
+  min-height: 400px;
+  max-height: 1100px;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 158px 42px;
+  overflow: hidden;
+  background: #fff;
+}
+.how-story[data-enhanced] .story-viewport { display: block; min-height: 0; position: relative; overflow: hidden; }
+.story-art { display: block; width: 100%; height: 100%; overflow: hidden; color: var(--how-blue); }
+.story-art [data-world] { will-change: transform; }
+.node-disc { fill: var(--how-pale); }
+.node-label { fill: var(--how-ink); font-weight: 500; text-anchor: middle; }
+.spine-label { text-anchor: start; }
+[data-trace] { fill: none; stroke: var(--how-blue); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; }
+[data-arrowhead] { fill: var(--how-blue); }
+.how-story[data-enhanced] .story-captions { display: grid; position: relative; width: 100%; max-width: 700px; padding: 10px 24px 0; align-content: start; }
+.how-story[data-enhanced] .scene-caption { display: block; grid-area: 1 / 1; padding: 0; border: 0; text-align: center; align-self: start; }
+.how-story[data-enhanced] .static-icon { display: none; }
+.how-story[data-enhanced] .scene-caption h2 { font-size: clamp(28px, 3vw, 39px); margin-bottom: 11px; }
+.how-story[data-enhanced] .scene-caption p { max-width: 580px; margin-inline: auto; font-size: 18px; }
+.how-story[data-enhanced] .story-status { display: flex; gap: 16px; align-items: center; justify-content: center; color: var(--how-secondary); font-size: 11px; padding-bottom: 14px; }
+.story-progress { width: 94px; height: 2px; background: #e9edf2; border-radius: 2px; overflow: hidden; }
+.story-progress::before { content: ''; display: block; height: 100%; background: var(--how-blue); transform: scaleX(var(--story-progress, 0)); transform-origin: left; }
+.story-status [data-readout] { min-width: 91px; }
+
+.how-explanation { scroll-margin-top: 100px; max-width: 1050px; margin: 0 auto; padding: clamp(90px, 14vh, 160px) 32px 90px; }
+.how-explanation > h2 { max-width: 700px; margin: 0 0 58px; font-size: clamp(33px, 4.4vw, 51px); font-weight: 500; letter-spacing: -.035em; line-height: 1.12; text-wrap: balance; }
+.explanation-row { display: grid; grid-template-columns: 1fr 1.55fr; gap: 60px; padding: 29px 0; border-top: 1px solid #e9ecf0; }
+.explanation-row h3 { margin: 0; font-size: 21px; font-weight: 500; letter-spacing: -.015em; }
+.explanation-row p { margin: 0; color: var(--how-secondary); font-size: 17px; line-height: 1.7; text-wrap: pretty; }
+.how-release { max-width: 760px; color: var(--how-secondary); font-size: 13px; line-height: 1.7; margin: 35px 0 0; }
+.how-diagram-link { display: inline-block; margin-top: 20px; font-size: 14px; color: var(--how-ink); text-underline-offset: 5px; text-decoration-color: #b4bbc5; }
+.how-cta { max-width: 1000px; margin: 0 auto; padding: 64px 24px 100px; text-align: center; }
+.how-cta h2 { margin: 0 0 20px; font-size: clamp(30px, 4.2vw, 48px); line-height: 1.15; font-weight: 500; letter-spacing: -.035em; text-wrap: balance; }
+.how-cta p { margin: 0 0 26px; color: var(--how-secondary); font-size: 17px; }
+.how-cta .how-button { display: inline-flex; align-items: center; justify-content: center; padding: 17px 29px; border-radius: 999px; background: var(--how-blue); color: var(--how-ink); text-decoration: none; font-size: 16px; }
+.how-page .footer { color: var(--how-secondary); padding-top: 32px; padding-bottom: max(30px, env(safe-area-inset-bottom)); }
+
+@media (max-width: 600px) {
+  body.how-page { --how-nav-height: 66px; }
+  .how-nav { padding-inline: 19px; gap: 14px; }
+  .how-home { font-size: 20px; gap: 8px; }
+  .how-home img { width: 27px; height: 27px; }
+  .how-nav nav { gap: 16px; font-size: 12px; }
+  .how-nav nav .nav-current { display: none; }
+  .how-nav .nav-access { padding: 9px 14px; }
+  .how-hero { padding: 70px 24px 46px; }
+  .how-hero h1 { font-size: clamp(34px, 8.9vw, 47px); }
+  .how-intro { font-size: 17px; margin-top: 23px; }
+  .how-hero-links { gap: 20px; font-size: 13px; }
+  .how-story[data-enhanced] .story-sticky { grid-template-rows: minmax(0,1fr) 172px 36px; }
+  .how-story[data-enhanced] .story-captions { padding-inline: 24px; padding-top: 12px; }
+  .how-story[data-enhanced] .scene-caption h2 { font-size: 27px; line-height: 1.12; }
+  .how-story[data-enhanced] .scene-caption p { font-size: 16px; line-height: 1.5; }
+  .scene-caption { grid-template-columns: 68px minmax(0,1fr); gap: 18px; padding-block: 29px; }
+  .scene-caption .static-icon { width: 66px; height: 66px; padding: 16px; }
+  .scene-caption h2 { font-size: 24px; }
+  .scene-caption p { font-size: 16px; }
+  .how-explanation { padding: 76px 24px 40px; }
+  .how-explanation > h2 { margin-bottom: 36px; }
+  .explanation-row { grid-template-columns: 1fr; gap: 12px; padding: 26px 0; }
+  .explanation-row p { font-size: 16px; }
+  .how-cta { padding-block: 58px 80px; }
+}
+@media (max-height: 600px) and (min-width: 601px) {
+  .how-story[data-enhanced] .story-sticky { grid-template-rows: minmax(0,1fr) 123px 28px; }
+  .how-story[data-enhanced] .scene-caption h2 { font-size: 25px; }
+  .how-story[data-enhanced] .scene-caption p { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .how-page *, .how-page *::before { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+@media print {
+  .how-nav { position: static; }
+  .how-story { height: auto !important; }
+  .how-story[data-enhanced] .story-sticky { display: block; position: static; height: auto; max-height: none; overflow: visible; }
+  .how-story[data-enhanced] .story-viewport, .how-story[data-enhanced] .story-status { display: none; }
+  .how-story[data-enhanced] .story-captions { display: block; transform: none !important; }
+  .how-story[data-enhanced] .scene-caption { opacity: 1 !important; transform: none !important; padding: 18px 0; break-inside: avoid; }
+  .how-hero, .how-explanation, .how-cta { padding-block: 30px; }
+}
