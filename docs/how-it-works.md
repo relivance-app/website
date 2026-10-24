@@ -33,6 +33,14 @@ complete frame. It does not ease toward a time-based target, intercept wheel
 or touch input, or continue playing after scrolling stops. Reverse scrolling
 and arbitrary seeks use the same state function.
 
+The opening begins before the stage pins: the goal flag is visible at 18%
+opacity on arrival and eases to full opacity over the first 160px of scrolling.
+The empty lead-in is reduced by up to 180px on desktop and 120px on phones,
+while maintaining at least 60px between the hero's end and the flag. The first
+heading therefore enters within the first short scroll. This entrance remains
+fully reversible and stops when scrolling stops; the later scene timings and
+complete-view composition are unchanged.
+
 GSAP ScrollTrigger would provide useful pinning and scrubbing utilities, but
 this site has no dependency or build pipeline. Native sticky plus one explicit
 timeline covers this choreography without another runtime. CSS scroll
@@ -162,7 +170,7 @@ node --test tests/*.test.cjs tests/*.test.mjs
 git diff --check
 ```
 
-The 20 tests comprise 12 existing waitlist checks and eight new geometry/motion/content
+The 21 tests comprise 12 existing waitlist checks and nine new geometry/motion/content
 checks. The browser runner requires Playwright available to Node; it is a QA
 tool only and is never shipped to visitors. With Playwright installed outside
 the repository, set `NODE_PATH` to its containing `node_modules` directory.
@@ -182,6 +190,8 @@ entry, and checks:
   and small phone 320 × 568, plus a Retina desktop close-up at 1280 × 1100.
 - Exact forward/reverse state equality, paused-scroll stability, complete-view
   label bounds, icon-to-label spacing, label/arrow collisions, and no horizontal overflow.
+- The opening at 0, 80 and 160px: visible flag, immediate scroll response,
+  early heading arrival, no autoplay and precise reversal before pinning.
 - Arrow shaft containment, fully hidden undrawn paths and white CTA text.
 - The cleaned-up header and removed progress UI; manual browser comparison of
   both CTA hover styles against the homepage button.

@@ -25,6 +25,7 @@ function enhance() {
   let pendingMeasure = false;
   let geometry;
   let lastProgress = -1;
+  let lastEntrance = -1;
   let lastScene = -1;
   let dead = false;
   let observer;
@@ -66,6 +67,11 @@ function enhance() {
     if (box.width < 1 || box.height < 1) throw new Error('Animation stage is unavailable');
     const header = document.querySelector('.how-nav').getBoundingClientRect().height;
     const compact = box.width < 600;
+    // Reclaim only the empty lead-in above the first icon. Keep at least 60px
+    // between the hero's end and the flag, including on short viewports.
+    const opening = evaluateStory(0, { width: box.width, height: box.height, compact });
+    const overlap = Math.max(0, Math.min(compact ? 120 : 180, box.height * .48 - 55 * opening.scale - 60));
+    story.style.marginTop = `${-overlap}px`;
     const travel = Math.max(2400, Math.min(4800, stage.offsetHeight * (compact ? 5.6 : 5.2)));
     story.style.height = `${stage.offsetHeight + travel}px`;
     geometry = {
@@ -93,9 +99,10 @@ function enhance() {
     if (dead) return;
     try {
       if (pendingMeasure) { pendingMeasure = false; measure(); }
-      const state = evaluateStory((window.scrollY - geometry.start) / geometry.travel, geometry);
-      if (state.progress === lastProgress) return;
+      const state = evaluateStory((window.scrollY - geometry.start) / geometry.travel, { ...geometry, introProgress: window.scrollY / 160 });
+      if (state.progress === lastProgress && state.entrance === lastEntrance) return;
       lastProgress = state.progress;
+      lastEntrance = state.entrance;
       world.setAttribute('transform', `translate(${state.x} ${state.y}) scale(${state.scale})`);
       nodes.forEach((node, i) => {
         node.style.opacity = state.opacity[i];

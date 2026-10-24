@@ -7,6 +7,17 @@ import { CIRCLE, CIRCLE_POINTS, circleConnections, circlePoint } from '../how-it
 const desktop = { width: 1240, height: 724 };
 const phone = { width: 320, height: 294, compact: true };
 
+test('the opening flag is visible before pinning and brightens smoothly with the first scroll', () => {
+  const start = evaluateStory(0, { ...desktop, introProgress: 0 });
+  const midway = evaluateStory(0, { ...desktop, introProgress: .5 });
+  const end = evaluateStory(0, { ...desktop, introProgress: 1 });
+  assert.ok(start.opacity[0] > 0);
+  assert.ok(midway.opacity[0] > start.opacity[0] && midway.opacity[0] < end.opacity[0]);
+  assert.equal(end.opacity[0], 1);
+  assert.deepEqual(end.opacity.slice(1), Array(6).fill(0));
+  assert.deepEqual(evaluateStory(0, { ...desktop, introProgress: .5 }), midway);
+});
+
 test('all relationship stations and connectors lie on one circle, including when trimmed for labels', () => {
   const distance = ([x, y]) => Math.hypot(x - CIRCLE.x, y - CIRCLE.y);
   for (const point of CIRCLE_POINTS) assert.ok(Math.abs(distance(point) - CIRCLE.radius) < 1e-9);

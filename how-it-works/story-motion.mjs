@@ -17,8 +17,9 @@ export const PATH_WINDOWS = [
 ];
 export const SCENE_STARTS = [0, .15, .29, .535, .615, .695, .775, .91];
 
-export function evaluateStory(input, { width, height, compact = false }) {
+export function evaluateStory(input, { width, height, compact = false, introProgress = 1 }) {
   const p = clamp(Number.isFinite(input) ? input : 0);
+  const entrance = clamp(Number.isFinite(introProgress) ? introProgress : 1);
   // A readable close-up is shared by A/B/C; D reveals the wider system.
   const closeScale = Math.min(compact ? 1.08 : 1.34, width / 230, height / 220);
   const overviewScale = Math.min((width - (compact ? 30 : 110)) / 720, (height - 52) / 1040);
@@ -32,6 +33,8 @@ export function evaluateStory(input, { width, height, compact = false }) {
   const anchorY = mix(height * .48, height * .43, zoom);
   const translateY = mix(height * .48 - cy * scale, anchorY - 480 * scale, zoom);
   const opacity = REVEALS.map((start) => ease(phase(p, start, start + .045)));
+  // The first flag is already present while the introduction scrolls away.
+  opacity[0] = mix(.18, 1, ease(entrance));
   const traces = PATH_WINDOWS.map(([start, end]) => phase(p, start, end));
   const scene = SCENE_STARTS.reduce((active, start, i) => p >= start ? i : active, 0);
   const captions = SCENE_STARTS.map((start, i) => {
@@ -41,7 +44,7 @@ export function evaluateStory(input, { width, height, compact = false }) {
     return enter * leave;
   });
   return {
-    progress: p, scene, zoom, scale,
+    progress: p, entrance, scene, zoom, scale,
     x: width / 2 - 500 * scale,
     // Give the closing caption room in short viewports without shrinking text.
     y: translateY - (height < 500 ? 12 * captions[7] : 0),

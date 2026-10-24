@@ -101,6 +101,28 @@ async function verifyVisibleLabels(page) {
       await page.evaluate(() => document.fonts.ready);
       await frame(page);
       assert.equal(await page.locator('[data-story]').getAttribute('data-enhanced'), '');
+      assert.ok(await page.locator('.how-intro').evaluate((intro) => {
+        const box = intro.getBoundingClientRect();
+        return document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)?.closest('.how-intro') === intro;
+      }), 'The opening stage covers the introduction');
+      const openingOpacity = Number(await page.locator('[data-node="goal"]').evaluate((node) => node.style.opacity));
+      assert.ok(openingOpacity > 0 && openingOpacity < 1, 'The opening flag is invisible');
+      await page.screenshot({ path: path.join(output, `${name}-opening-0.png`) });
+      await page.evaluate(() => scrollTo(0, 80));
+      await frame(page);
+      const early = await snapshot(page);
+      assert.ok(Number(early.nodes[0]) > openingOpacity, 'The flag waits for pinning before fading in');
+      await page.waitForTimeout(120);
+      assert.deepEqual(await snapshot(page), early, 'The opening continued without scrolling');
+      await page.screenshot({ path: path.join(output, `${name}-opening-80.png`) });
+      await page.evaluate(() => scrollTo(0, 160));
+      await frame(page);
+      assert.equal(Number(await page.locator('[data-node="goal"]').evaluate((node) => node.style.opacity)), 1);
+      assert.ok(await page.locator('#step-goal h2').evaluate((heading) => heading.getBoundingClientRect().bottom <= innerHeight), 'Set your goal arrives too late');
+      await page.screenshot({ path: path.join(output, `${name}-opening-160.png`) });
+      await page.evaluate(() => scrollTo(0, 80));
+      await frame(page);
+      assert.deepEqual(await snapshot(page), early, 'The opening did not reverse precisely');
       const snapshots = new Map();
       const stops = [.04, .19, .33, .46, .57, .65, .73, .81, .88, .95];
       for (const p of stops) {
