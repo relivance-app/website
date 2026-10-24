@@ -68,6 +68,12 @@ Decisions worth calling out:
 
 ## Local preview
 
+The scroll-driven product explanation is at `/how-it-works/`. It uses native
+sticky positioning, individually animated SVG elements, and a small reversible
+scroll renderer, with a complete static presentation for reduced motion or
+missing JavaScript. See [implementation, product scope and QA](docs/how-it-works.md).
+The homepage links to it; its early-access CTA returns to the existing form.
+
 Any static-file server works. Two options:
 
 ```sh
