@@ -344,16 +344,22 @@ body {
   font-weight: 600;
   letter-spacing: 0.01em;
   cursor: pointer;
-  transition: opacity 160ms ease, transform 80ms ease;
   -webkit-appearance: none;
   appearance: none;
 }
 
-.access-submit:hover {
+.access-submit,
+.cta-feedback {
+  transition: opacity 160ms ease, transform 80ms ease;
+}
+
+.access-submit:hover,
+.cta-feedback:hover {
   opacity: 0.94;
 }
 
-.access-submit:active {
+.access-submit:active,
+.cta-feedback:active {
   transform: scale(0.985);
 }
 
@@ -806,3 +812,18 @@ body.doc .footer {
 .access-captcha { width: 100%; }
 .access-captcha:empty { display: none; }
 .access-submit:disabled { cursor: default; }
+
+/* Quiet discovery link; the waitlist and its behavior are unchanged. */
+.brand .how-it-works-link {
+  color: var(--wv-primary);
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-color: var(--wv-border);
+  text-underline-offset: 5px;
+  border-radius: 3px;
+}
+.brand .how-it-works-link:focus-visible {
+  outline: 2px solid var(--cta-blue);
+  outline-offset: 6px;
+}
