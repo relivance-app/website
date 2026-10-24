@@ -43,6 +43,7 @@
 }
 
 :root {
+  --motion-ease: cubic-bezier(0.4, 0, 0.25, 1);
   /* Light-mode palette (from Assets.xcassets/wv*.colorset) */
   --wv-background: #ffffff;
   --wv-primary: #1d1f27;     /*  rgb(29, 31, 39)   — body + headlines  */
@@ -309,7 +310,7 @@ body {
   font-weight: 400;
   letter-spacing: 0;
   outline: none;
-  transition: box-shadow 160ms ease, background-color 160ms ease;
+  transition: box-shadow 160ms var(--motion-ease), background-color 160ms var(--motion-ease);
   -webkit-appearance: none;
   appearance: none;
 }
@@ -350,7 +351,7 @@ body {
 
 .access-submit,
 .cta-feedback {
-  transition: opacity 160ms ease, transform 80ms ease;
+  transition: opacity 160ms var(--motion-ease), transform 80ms var(--motion-ease);
 }
 
 .access-submit:hover,
@@ -541,7 +542,7 @@ body {
      widening the spacing around the · separator. */
   padding: 2px 0;
   border-radius: 4px;
-  transition: color 120ms ease;
+  transition: color 120ms var(--motion-ease);
 }
 
 .footer-nav a:hover,

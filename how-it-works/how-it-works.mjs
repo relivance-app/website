@@ -1,4 +1,4 @@
-import { evaluateStory, NODE_IDS, POINTS } from './story-motion.mjs';
+import { evaluateStory, ease, NODE_IDS, POINTS } from './story-motion.mjs';
 import { circleConnections } from './story-geometry.mjs';
 
 const story = document.querySelector('[data-story]');
@@ -26,6 +26,7 @@ function enhance() {
   let geometry;
   let lastProgress = -1;
   let lastEntrance = -1;
+  let lastFlight = -1;
   let lastScene = -1;
   let dead = false;
   let observer;
@@ -99,14 +100,19 @@ function enhance() {
     if (dead) return;
     try {
       if (pendingMeasure) { pendingMeasure = false; measure(); }
-      const state = evaluateStory((window.scrollY - geometry.start) / geometry.travel, { ...geometry, introProgress: window.scrollY / 160 });
-      if (state.progress === lastProgress && state.entrance === lastEntrance) return;
+      const introProgress = window.scrollY / 160;
+      // A small eased lead-in makes the first scroll visibly pull back. The
+      // longer flight keeps moving through the handoff into the pinned stage.
+      const cameraProgress = .18 * ease(introProgress) + .82 * Math.min(1, Math.max(0, window.scrollY / (geometry.start + geometry.travel * .5)));
+      const state = evaluateStory((window.scrollY - geometry.start) / geometry.travel, { ...geometry, introProgress, cameraProgress });
+      if (state.progress === lastProgress && state.entrance === lastEntrance && state.flight === lastFlight) return;
       lastProgress = state.progress;
       lastEntrance = state.entrance;
+      lastFlight = state.flight;
       world.setAttribute('transform', `translate(${state.x} ${state.y}) scale(${state.scale})`);
       nodes.forEach((node, i) => {
         node.style.opacity = state.opacity[i];
-        const strength = state.scene === i ? 1 : .94;
+        const strength = .94 + .06 * state.captions[i];
         node.querySelector('.node-disc').style.opacity = strength;
         node.querySelector('.node-glyph').setAttribute('transform', `scale(${.94 + .06 * state.opacity[i]})`);
       });

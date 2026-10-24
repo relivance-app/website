@@ -117,18 +117,41 @@ async function verifyVisibleLabels(page) {
       await page.screenshot({ path: path.join(output, `${name}-opening-80.png`) });
       await page.evaluate(() => scrollTo(0, 160));
       await frame(page);
+      const at160 = await snapshot(page);
       assert.equal(Number(await page.locator('[data-node="goal"]').evaluate((node) => node.style.opacity)), 1);
       assert.ok(await page.locator('#step-goal h2').evaluate((heading) => heading.getBoundingClientRect().bottom <= innerHeight), 'Set your goal arrives too late');
       await page.screenshot({ path: path.join(output, `${name}-opening-160.png`) });
+      await page.evaluate(() => {
+        const root = document.querySelector('[data-story]');
+        const pin = root.getBoundingClientRect().top + scrollY - document.querySelector('.how-nav').offsetHeight;
+        scrollTo(0, (160 + pin) / 2);
+      });
+      await frame(page);
+      assert.notEqual((await snapshot(page)).camera, at160.camera, 'Camera stopped between the opening fade and pinning');
       await page.evaluate(() => scrollTo(0, 80));
       await frame(page);
       assert.deepEqual(await snapshot(page), early, 'The opening did not reverse precisely');
       const snapshots = new Map();
-      const stops = [.04, .19, .33, .46, .57, .65, .73, .81, .88, .95];
+      const stops = [.04, .19, .29, .33, .46, .57, .65, .73, .81, .88, .95];
       for (const p of stops) {
         await seek(page, p);
         snapshots.set(p, await snapshot(page));
         await noOverflow(page);
+        if (p === .29) {
+          const spine = await page.locator('.story-art').evaluate((svg) => {
+            const bounds = svg.getBoundingClientRect();
+            const nodes = [...svg.querySelectorAll('[data-node]')].slice(0, 3);
+            const caption = document.querySelector('#step-network h2').getBoundingClientRect();
+            return nodes.every((node) => {
+              const label = node.querySelector('.node-label').getBoundingClientRect();
+              const disc = node.querySelector('.node-disc').getBoundingClientRect();
+              return Number(node.style.opacity) === 1 && Number(node.querySelector('.node-label').style.opacity) === 1
+                && disc.top >= bounds.top && disc.bottom <= bounds.bottom
+                && label.left >= bounds.left && label.right <= bounds.right && label.bottom < caption.top - 12;
+            });
+          });
+          assert.ok(spine, 'Goal, milestones and network are not all visible at the network heading');
+        }
         if (p === .04) assert.equal(await page.locator('.how-button').evaluate((button) => { button.focus(); return document.activeElement === button; }), false, 'Hidden CTA received focus');
         if (p === .19) {
           const tipGap = await page.locator('[data-trace]').first().evaluate((path) => {
@@ -143,7 +166,7 @@ async function verifyVisibleLabels(page) {
           const hidden = await page.locator('[data-trace]').evaluateAll((paths) => paths.slice(2).map((path) => getComputedStyle(path).opacity));
           assert.deepEqual(hidden, Array(5).fill('0'), 'Undrawn connectors leave blue dots');
         }
-        if ([.04, .19, .33, .57, .81, .95].includes(p)) await page.screenshot({ path: path.join(output, `${name}-${p}.png`) });
+        if ([.04, .19, .29, .33, .57, .81, .95].includes(p)) await page.screenshot({ path: path.join(output, `${name}-${p}.png`) });
       }
       await verifyVisibleLabels(page);
       await verifyFinalCTA(page);

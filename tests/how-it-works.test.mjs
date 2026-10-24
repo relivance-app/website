@@ -1,11 +1,37 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
-import { evaluateStory, REVEALS, PATH_WINDOWS, SCENE_STARTS, POINTS } from '../how-it-works/story-motion.mjs';
+import { appleEase, evaluateStory, REVEALS, PATH_WINDOWS, SCENE_STARTS, POINTS } from '../how-it-works/story-motion.mjs';
 import { CIRCLE, CIRCLE_POINTS, circleConnections, circlePoint } from '../how-it-works/story-geometry.mjs';
 
 const desktop = { width: 1240, height: 724 };
 const phone = { width: 320, height: 294, compact: true };
+
+test('appleEase follows the requested cubic Bezier with exact endpoints', () => {
+  assert.equal(appleEase(0), 0);
+  assert.equal(appleEase(1), 1);
+  assert.ok(Math.abs(appleEase(.25) - .2146407) < 1e-6);
+  assert.ok(Math.abs(appleEase(.5) - .7459881) < 1e-6);
+  assert.ok(Math.abs(appleEase(.75) - .9537173) < 1e-6);
+});
+
+test('the camera continuously pulls back and retains the first three stations by the network heading', () => {
+  for (const size of [desktop, phone]) {
+    let previous = evaluateStory(0, size).scale;
+    for (let p = .001; p < .5; p += .001) {
+      const state = evaluateStory(p, size);
+      assert.ok(state.scale < previous, `Camera stopped at ${p}`);
+      previous = state.scale;
+    }
+    const network = evaluateStory(.29, size);
+    assert.deepEqual(network.opacity.slice(0, 3), [1, 1, 1]);
+    assert.equal(network.labelOpacity, 1);
+    for (const [, y] of POINTS.slice(0, 3)) {
+      assert.ok(network.y + (y - 55) * network.scale >= 0);
+      assert.ok(network.y + (y + network.labelY) * network.scale <= size.height);
+    }
+  }
+});
 
 test('the opening flag is visible before pinning and brightens smoothly with the first scroll', () => {
   const start = evaluateStory(0, { ...desktop, introProgress: 0 });
@@ -57,14 +83,14 @@ test('each clockwise connector starts after the preceding one and reveals its ne
     const before = evaluateStory(start, desktop);
     assert.equal(before.traces[i], 0);
     const halfway = evaluateStory((start + end) / 2, desktop);
-    assert.ok(Math.abs(halfway.traces[i] - .5) < 1e-12);
+    assert.ok(Math.abs(halfway.traces[i] - appleEase(.5)) < 1e-6);
     assert.ok(halfway.traces.slice(i + 1).every((n) => n === 0));
     if (i < 6) assert.ok(REVEALS[i + 1] >= start && REVEALS[i + 1] < end);
   }
 });
 
 test('camera motion and caption crossfades have no jumps at scene and zoom boundaries', () => {
-  for (const boundary of [...SCENE_STARTS, .075, .205, .215, .345, .365, .5]) {
+  for (const boundary of [...SCENE_STARTS, .015, .025, .045, .085, .13, .145, .16, .21, .24, .27, .5]) {
     const a = evaluateStory(boundary - 1e-7, desktop);
     const b = evaluateStory(boundary + 1e-7, desktop);
     for (const field of ['x', 'y', 'scale', 'captionLift']) assert.ok(Math.abs(a[field] - b[field]) < .01, `${boundary}: ${field}`);
@@ -90,7 +116,11 @@ test('state is finite and bounded, including out-of-range or invalid scroll valu
     const state = evaluateStory(p, phone);
     for (const n of [state.x, state.y, state.scale, state.labelSize, state.labelY]) assert.ok(Number.isFinite(n));
     for (const n of [...state.opacity, ...state.captions, ...state.traces, state.progress]) assert.ok(n >= 0 && n <= 1);
-    assert.ok(Math.abs(state.captions.reduce((a, b) => a + b, 0) - 1) < 1e-12);
+    assert.ok(state.captions.reduce((a, b) => a + b, 0) <= 1);
+  }
+  for (let p = 0; p <= 1; p += .0005) {
+    assert.ok(evaluateStory(p, phone).captions.filter((opacity) => opacity > 0).length <= 1,
+      `Captions overlap at ${p}`);
   }
 });
 

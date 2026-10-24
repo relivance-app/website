@@ -25,7 +25,8 @@ Files:
 - `how-it-works/how-it-works.mjs`: DOM adapter, measurements and lifecycle.
 - `tests/how-it-works.test.mjs`: motion and content contracts.
 - `tests/how-it-works.browser.cjs`: optional real-browser regression runner.
-- `index.html` and `styles.css`: quiet homepage discovery link only.
+- `index.html`: quiet homepage discovery link.
+- `styles.css`: shared site styles, including the motion easing token.
 
 Native `position: sticky` pins the stage. A passive scroll listener schedules
 one `requestAnimationFrame`; the renderer maps the current scroll offset to a
@@ -38,8 +39,22 @@ opacity on arrival and eases to full opacity over the first 160px of scrolling.
 The empty lead-in is reduced by up to 180px on desktop and 120px on phones,
 while maintaining at least 60px between the hero's end and the flag. The first
 heading therefore enters within the first short scroll. This entrance remains
-fully reversible and stops when scrolling stops; the later scene timings and
-complete-view composition are unchanged.
+fully reversible and stops when scrolling stops.
+
+The camera starts pulling back with the first scroll and continues through the
+goal, milestones and network, without separate station holds. All three stations
+and their labels are fully visible when the network heading appears. A small
+opening contribution blends into the longer pull-back so motion continues
+before and after the stage pins. The complete-view composition and later
+relationship-circle timing are unchanged.
+
+The requested AppleEase curve, `cubic-bezier(0.4, 0, 0.25, 1)`, shapes the camera,
+reveals, connector drawing and caption handoffs. The evaluator solves the curve's
+x coordinate before evaluating y, matching CSS easing. The same token controls
+shared CSS transitions, including both pages' early-access buttons. Easing is
+applied to scroll position, with one camera flight across the opening journey;
+it introduces no timed lag or motion after scrolling stops. Captions fade out
+before the next fades in, preventing superimposed text.
 
 GSAP ScrollTrigger would provide useful pinning and scrubbing utilities, but
 this site has no dependency or build pipeline. Native sticky plus one explicit
@@ -56,10 +71,9 @@ responsive to stage height). The final 9% holds the complete view.
 
 | Progress | Motion |
 | --- | --- |
-| 0–.15 | Goal appears; first arrow extends downward. |
-| .15–.29 | Camera travels to milestones; next arrow extends. |
-| .29–.365 | Network is the focus; the surrounding circle remains hidden. |
-| .365–.50 | Camera zooms out around that same network icon. |
+| 0–.15 | Continuous pull-back begins; goal and milestones reveal with the first arrow. |
+| .15–.29 | The next arrow and network reveal into the expanding frame. |
+| .29–.50 | All three opening steps remain visible as the pull-back settles into the complete-view framing. |
 | .50–.58 | Clockwise path traces toward Prepare. |
 | .58–.66 | Clockwise path traces toward Meeting. |
 | .66–.74 | Clockwise path traces toward Save a recap. |
@@ -67,7 +81,7 @@ responsive to stage height). The final 9% holds the complete view.
 | .82–.90 | Final path returns to the network. |
 | .91–1 | Complete composition holds before normal document flow resumes. |
 
-Node reveals and caption crossfades overlap the relevant path segments. Each
+Node reveals and caption handoffs overlap the relevant path segments. Each
 path has normalized `pathLength="1"`; stroke-dashoffset draws the path. Shafts
 stop seven SVG units behind the tip, inside each arrowhead. Undrawn paths are
 explicitly hidden, preventing zero-length round caps from appearing as stray
@@ -170,7 +184,7 @@ node --test tests/*.test.cjs tests/*.test.mjs
 git diff --check
 ```
 
-The 21 tests comprise 12 existing waitlist checks and nine new geometry/motion/content
+The 23 tests comprise 12 existing waitlist checks and 11 new geometry/motion/content
 checks. The browser runner requires Playwright available to Node; it is a QA
 tool only and is never shipped to visitors. With Playwright installed outside
 the repository, set `NODE_PATH` to its containing `node_modules` directory.
@@ -192,6 +206,8 @@ entry, and checks:
   label bounds, icon-to-label spacing, label/arrow collisions, and no horizontal overflow.
 - The opening at 0, 80 and 160px: visible flag, immediate scroll response,
   early heading arrival, no autoplay and precise reversal before pinning.
+- Continuous camera movement into pinning and all three opening steps visible
+  at the network heading, including on short phones.
 - Arrow shaft containment, fully hidden undrawn paths and white CTA text.
 - The cleaned-up header and removed progress UI; manual browser comparison of
   both CTA hover styles against the homepage button.
@@ -205,7 +221,10 @@ entry, and checks:
 - Existing homepage/legal routes, discovery navigation and original CTA.
 
 All these checks passed in installed headless Google Chrome, with desktop,
-phone and static-fallback screenshots inspected. Physical iPhone Safari,
+phone and static-fallback screenshots inspected. A separate comparison against
+Chrome's native CSS animation confirmed that the JavaScript easing matches the
+shared CSS curve at 25%, 50% and 75% progress (within 0.000001).
+Physical iPhone Safari,
 Firefox, screen-reader interaction and real touch performance remain
 unverified. Stable `svh` is used deliberately; physical device review remains
 valuable before release.
