@@ -40,7 +40,7 @@
       </header>
 
       <h1 class="doc-title">Privacy Policy</h1>
-      <p class="doc-meta">Effective: <time datetime="2026-10-22">October 22, 2026</time></p>
+      <p class="doc-meta">Effective: <time datetime="2026-11-04">November 4, 2026</time></p>
 
       <section class="doc-section">
         <p>
@@ -224,8 +224,8 @@
           </li>
           <li>
             <strong>Voice input you create in the App:</strong>
-            optional voice recordings you make inside the App through
-            Smart Input or Recap (your own dictation), plus the
+            optional voice recordings you make inside the App where voice
+            input is available (your own dictation), plus the
             AI-generated transcripts derived from them. The App does
             not record meetings, calls, or conversations on your
             behalf; you record yourself.
@@ -259,9 +259,8 @@
             only unless the resulting content is uploaded by you): Apple
             Contacts framework reads (with your authorisation),
             EventKit calendar and reminders access, microphone (for
-            recap audio), camera (for contact avatars), photo library
-            (for avatars and OCR), speech recognition (for on-device
-            transcription support).
+            voice input where available), camera (for contact avatars),
+            and photo library (for avatars and OCR).
           </li>
           <li>
             <strong>Subscription &amp; purchase data:</strong> Apple
@@ -295,11 +294,15 @@
           </li>
         </ul>
         <p>
-          We do <strong>not</strong> collect: precise device location,
-          biometric identifiers, browsing history, advertising
-          identifiers, financial-account numbers, government-issued
-          identifiers, health data, or content from any service you
-          have not explicitly connected.
+          We do <strong>not</strong> ask for or seek to collect: precise
+          device location, biometric identifiers, browsing history,
+          advertising identifiers, financial-account numbers,
+          government-issued identifiers, health data, or content from
+          any service you have not explicitly connected. Notes, recaps,
+          messages, and other text you write may nevertheless contain
+          health information or other sensitive details about you or
+          other people, and AI features can process that content when
+          they use it.
         </p>
       </section>
 
@@ -314,7 +317,7 @@
           <li>
             <strong>From your devices, with your permission:</strong>
             Apple Contacts, Apple Calendar, Apple Reminders, microphone,
-            camera, photo library, speech recognition.
+            camera, photo library.
           </li>
           <li>
             <strong>From integrations you authorise:</strong> Google
@@ -413,19 +416,22 @@
         <p>
           We do <strong>not</strong> use your information for: targeted
           advertising, cross-context behavioural advertising, sale to
-          data brokers, training of any third-party AI model on your
-          personal data, or automated decision-making that produces
-          legal or similarly significant effects concerning you.
+          data brokers, or automated decision-making that produces legal
+          or similarly significant effects concerning you. We do not use
+          your personal data to train AI models ourselves. Whether a
+          provider may use submitted data depends on its terms and our
+          configuration, as described in Sections 9 and 10.
         </p>
       </section>
 
       <section class="doc-section">
         <h2>9. Third-Party Sub-Processors</h2>
         <p>
-          We use the following service providers to operate the Service.
-          Each receives only the data necessary to perform its function
-          and is contractually bound to confidentiality and appropriate
-          data protection.
+          We use the following service providers to operate the Service,
+          and we aim to limit what each receives to what its function
+          requires. Published provider terms do not by themselves show
+          how our own accounts are configured. Sections 10 and 13 explain
+          what remains under verification for AI providers.
         </p>
         <p><strong>Website sub-processors:</strong></p>
         <ul>
@@ -470,71 +476,77 @@
             measures to support GDPR compliance.
           </li>
           <li>
-            <strong>OpenAI, L.L.C.</strong> (California, United States) —
-            the App includes an AI-assisted spreadsheet-import pathway
-            that can use OpenAI to map spreadsheet columns to contact
-            fields. When configured to use OpenAI, this pathway sends
-            column headings and up to three sample rows for processing.
-            Sample rows may contain names, email addresses, phone
-            numbers, addresses, and notes. This describes the available
-            pathway; it does not confirm that OpenAI processing is
-            enabled in the deployed service. Under OpenAI’s API terms
-            in effect at the time
-            of this policy, API inputs and outputs are not used to
-            train OpenAI’s models by default unless the customer opts
-            in; provider processing and limited retention may occur
-            for operational, security, abuse-prevention, or legal
-            purposes according to the provider’s terms and our
-            configuration. Relivance does not permit OpenAI to use
-            user content for advertising.
+            <strong>OpenAI</strong> (United States; the OpenAI entity for
+            our account is under verification) — spreadsheet import. When
+            you import a CSV or Excel file and OpenAI is configured on
+            our backend, the App’s import sends the file’s column
+            headings and up to three sample rows to OpenAI to map columns
+            to contact fields. If it is not configured, the import uses
+            built-in rules instead. Sample rows may contain names, email
+            addresses, phone numbers, addresses, and notes, including
+            about people who are not Relivance users. OpenAI’s published
+            terms state that API inputs and outputs are not used for
+            training by default unless the customer opts in, and that
+            abuse-monitoring logs may be kept for up to 30 days, or longer
+            where required by law or to prevent harm. We do not provide
+            your content to OpenAI for advertising.
           </li>
           <li>
-            <strong>Anthropic, PBC</strong> (California, United States) —
-            large-language-model API (Claude) used for conversational
-            assistance, request interpretation, answers using selected
-            saved context, relationship and meeting briefs, outreach
-            drafts, recap summaries, contact-information extraction,
-            goal planning and coaching, and screenshot interpretation.
-            Depending on the feature, the information sent may include
-            your messages and conversation history, meeting notes or
-            transcripts, participant and contact names, professional
-            information, relationship context, tasks, goals, selected
-            correspondence, and screenshots you submit. This may
-            include information about people who are not Relivance users.
-            Relevant portions of your data are transmitted to
-            Anthropic for inference. Under Anthropic’s API terms in
-            effect at the
-            time of this policy, API inputs and outputs are not used
-            to train Anthropic’s models by default unless the customer
-            opts in; provider processing and limited retention may
-            occur for operational, security, abuse-prevention, or
-            legal purposes according to the provider’s terms and our
-            configuration. Relivance does not permit Anthropic to use
-            user content for advertising.
+            <strong>Anthropic</strong> (the Anthropic entity for our
+            account is under verification) — large-language-model API
+            (Claude) used for conversational assistance, request
+            interpretation, answers using selected saved context,
+            relationship and meeting briefs, outreach drafts, recap
+            processing, contact-information extraction, goal planning and
+            coaching, and screenshot interpretation. Depending on the
+            feature, the information sent may include your messages and
+            conversation history; goals, milestones, and attachments;
+            meeting titles, dates, and participants; the full text of
+            recaps and notes; interaction summaries; tasks; contact names
+            and birthdays; roles, organisations, education, and email
+            domains; relationship context; selected correspondence; and
+            screenshots you submit. Names are generally sent as written.
+            This includes information about people who are not Relivance
+            users. Anthropic’s published commercial terms state that it
+            may not train models on customer content, with exceptions for
+            feedback and programmes a customer joins. Its published
+            default is deletion of API inputs and outputs within 30 days.
+            Published exceptions include content kept to enforce its
+            usage policy (flagged content for up to 2 years, and related
+            safety scores for up to 7 years), feedback (5 years), retention
+            required by law, and separate agreements. Its published
+            commercial terms incorporate its data processing addendum. Our
+            Anthropic organisation’s default retention setting is 30 days,
+            and zero data retention is not enabled at that level. We have
+            not yet confirmed the customer of record for that organisation,
+            or that it is the account our production backend uses. We do
+            not provide your content to Anthropic for advertising.
           </li>
           <li>
-            <strong>Deepgram, Inc.</strong> (Delaware / California,
-            United States) — speech-to-text API used to transcribe
-            voice input that you record inside the App via Smart
-            Input and Recap. Audio is transmitted to Deepgram for
-            transcription, and the transcript is returned to the
-            App. Under Deepgram’s API terms in effect at the time of
-            this policy, API audio and transcripts are not used to
-            train Deepgram’s generalised models by default unless the
-            customer opts in. Provider processing and limited
-            retention may occur for operational, security,
-            abuse-prevention, or legal purposes according to provider
-            terms and our configuration. Relivance does not permit
-            Deepgram to use your content for advertising.
+            <strong>Deepgram, Inc.</strong> (United States) — speech-to-text
+            API used to transcribe voice recordings where that feature is
+            available. Audio is sent to Deepgram’s US endpoint, and the
+            transcript is returned to the App. Deepgram’s published terms
+            allow it to retain audio and transcripts and use them to
+            improve and train its models unless a request opts out. Since
+            our November 4, 2026 deployment, our transcription requests opt
+            out, and
+            Deepgram’s published documentation states that it then keeps
+            that content only as long as needed to process the request,
+            with request metadata available for 90 days. Before this
+            deployment, our transcription endpoint did not explicitly set
+            the request-level model-improvement opt-out parameter. We have
+            not verified historical requests or account-level opt-out
+            settings. We do not provide your content to Deepgram
+            for advertising.
           </li>
           <li>
             <strong>Apple Inc.</strong> (California, United States) —
             App Store distribution, StoreKit in-app purchase processing,
             Apple ID authentication (when you choose Sign in with
             Apple), App Store Server Notifications for subscription
-            state changes, EventKit for on-device calendar and
-            reminders, the Speech framework for on-device transcription
-            support.
+            state changes, and EventKit for on-device calendar and
+            reminders.
           </li>
           <li>
             <strong>Google LLC</strong> (California, United States) —
@@ -581,15 +593,13 @@
       <section class="doc-section">
         <h2>10. How AI Processing Works</h2>
         <p>
-          Several App features rely on third-party large-language-model
-          APIs for inference. The provider depends on the feature. When
-          you use these features, the App sends the relevant portions
-          of your content needed to perform the task — for example,
-          contact context, goal text, interaction summaries,
-          recap-audio transcripts, notes, and uploaded text where
-          applicable — to the AI provider for processing. We send the
-          minimum content reasonably needed to produce the requested
-          output.
+          Several App features rely on third-party AI APIs. The provider
+          depends on the feature, as listed in Section 9. Features send
+          the content they need to perform the task — for example,
+          contact context, goal text, interaction summaries, recaps,
+          notes, and uploaded text where applicable. We aim to limit what
+          is sent, but it can be extensive: a Reach Out draft, for
+          example, can use a contact’s saved notes and history.
         </p>
         <p>
           Depending on the feature, the information sent may include
@@ -599,7 +609,10 @@
           is sent to the AI provider for processing. Some processing
           begins as part of using a feature, such as opening Reach Out,
           submitting a recap, or importing a spreadsheet; it does not
-          always require a separate request to generate AI content.
+          always require a separate request to generate AI content. Some
+          processing runs in the background: creating a goal, or opening
+          People, can send goal text and professional details about
+          contacts for analysis.
         </p>
         <p>
           Some pathways replace internal record identifiers with
@@ -618,14 +631,15 @@
           for the full schedule.
         </p>
         <p>
-          Under our AI providers’ API terms in effect at the time of
-          this policy, API inputs and outputs are not used to train
-          the providers’ generalised models by default unless the
-          customer opts in. Limited provider-side processing and
-          retention may occur for operational, security,
-          abuse-prevention, or legal purposes according to provider
-          terms and our configuration. We do not permit our AI
-          providers to use your content for advertising.
+          <strong>Published terms and our own accounts.</strong> Section
+          9 summarises what each provider publishes. Those summaries
+          describe provider terms, not verified settings of our accounts.
+          We have not completed verification of the contracting customer
+          for each provider account, which data-processing agreement
+          applies, or the settings that apply to each workspace and
+          request. We do not claim zero data retention or EU-only AI
+          processing. We do not
+          provide your content to AI providers for advertising.
         </p>
       </section>
 
@@ -719,12 +733,19 @@
           Relivance LLC is a U.S. company, and some of our
           sub-processors remain U.S.-based. Our production app
           database, authentication, and file storage are hosted in
-          Supabase Central EU / Frankfurt, Germany. Even so, some
-          personal data may still be transferred to and processed by
-          U.S.-based providers — for example Anthropic, OpenAI (if
-          enabled), Sentry, Apple, Google (if
-          you connect it), or providers supporting our support and
-          legal operations.
+          Supabase Central EU / Frankfurt, Germany. Even so, personal
+          data is transferred outside the EU. Examples include U.S.-based
+          providers such as Sentry, Apple, Google (if you connect it), and
+          providers supporting our support and legal operations.
+        </p>
+        <p>
+          AI processing does not stay in the EU. Anthropic’s published
+          documentation states that, unless U.S.-only processing is
+          selected, requests may be processed in any geography where it
+          operates, and its direct API offers no EU-only option. Our
+          requests do not select a region. Our transcription requests use
+          Deepgram’s US endpoint. OpenAI requests, where configured, use
+          OpenAI’s standard endpoint.
         </p>
         <p>
           The Website’s dedicated waitlist database is hosted in Frankfurt,
@@ -736,10 +757,12 @@
         </p>
         <p>
           Verification of the agreements and transfer arrangements
-          applicable to each provider remains in progress. We have
-          not completed verification of the production Anthropic
-          account’s data-processing agreement or international-transfer
-          arrangements. This policy does not confirm that Standard
+          applicable to each provider remains in progress. Anthropic’s
+          published commercial terms incorporate its data processing
+          addendum, including its transfer terms. Because the customer of
+          record and the account used by our production backend are not
+          yet confirmed, we do not state that those terms cover our
+          production traffic. This policy does not confirm that Standard
           Contractual Clauses (SCCs) have been executed with every
           non-EU provider. EU hosting of our primary backend does not
           mean that all processing takes place in the EU.
@@ -792,8 +815,8 @@
             account is active.
           </li>
           <li>
-            <strong>Contacts, interactions, tasks, goals, recap audio,
-            and derived intelligence:</strong> for as long as your
+            <strong>Contacts, interactions, tasks, goals, voice
+            recordings, and derived intelligence:</strong> for as long as your
             account is active, unless deleted earlier. Deleting an
             item in the App does not establish that every related
             record or provider-held copy has been erased. Complete
@@ -838,8 +861,21 @@
             to 90 days, then aggregated or deleted.
           </li>
           <li>
-            <strong>Logs (web request logs, security logs):</strong>
-            retained for up to 30 days.
+            <strong>Logs (web request logs, security logs):</strong> we
+            aim to keep these for up to 30 days. Retention of
+            hosting-provider logs remains under verification, and server
+            logs may contain limited incidental personal data.
+          </li>
+          <li>
+            <strong>AI usage records:</strong> records of AI calls (feature,
+            model, token counts, cost, and status, without prompts or
+            responses). We have not yet set a fixed deletion period. After
+            account deletion they are kept without your user identifier.
+          </li>
+          <li>
+            <strong>Copies held by AI providers:</strong> these follow the
+            provider terms summarised in Section 9. We have not verified
+            how those terms apply to our accounts.
           </li>
         </ul>
         <p>
@@ -943,7 +979,7 @@
           </li>
           <li>
             <strong>Sensitive personal information:</strong> certain
-            data we collect — for example, recap audio, contact records
+            data we collect — for example, voice recordings, contact records
             about identified individuals, free-text notes — may
             constitute “sensitive personal information” under CPRA. We
             use sensitive personal information only for the purposes
