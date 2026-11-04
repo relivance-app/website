@@ -532,8 +532,11 @@
             November 4, 2026, our transcription requests opt out, and
             Deepgram’s published documentation states that it then keeps
             that content only as long as needed to process the request,
-            with request metadata available for 90 days. Any requests before
-            that date did not opt out. We do not provide your content to Deepgram
+            with request metadata available for 90 days. Before this
+            deployment, our transcription endpoint did not explicitly set
+            the request-level model-improvement opt-out parameter. We have
+            not verified historical requests or account-level opt-out
+            settings. We do not provide your content to Deepgram
             for advertising.
           </li>
           <li>
